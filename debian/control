@@ -2,6 +2,7 @@ Source: fastrpc
 Maintainer: Ekansh Gupta <ekangupt@qti.qualcomm.com>
 Standards-Version: 4.6.2
 Section: misc
+Priority: optional
 Rules-Requires-Root: no
 Build-Depends: debhelper-compat (= 13)
 Homepage: https://github.com/qualcomm/fastrpc
@@ -15,7 +16,6 @@ Description: Qualcomm FastRPC and library
  This package contains the shared libraries libadsprpc, libcdsprpc, libsdsprpc,
  and their _default_listener counterparts.
 Section: libs
-Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}
 
 Package: libfastrpc-dev
@@ -27,7 +27,6 @@ Description: Qualcomm FastRPC - development files
  This package contains library headers for the shared libraries shipped in the
  libfastrpc1 package.
 Section: libdevel
-Priority: optional
 Depends: ${misc:Depends}, libfastrpc1 (= ${binary:Version} )
 
 Package: fastrpc-support
