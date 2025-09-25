@@ -1,0 +1,21 @@
+diff --git a/src/dsprpcd.c b/src/dsprpcd.c
+index b3d01f8..87416b9 100644
+--- a/src/dsprpcd.c
++++ b/src/dsprpcd.c
+@@ -16,13 +16,13 @@
+ #include <string.h>
+ 
+ #ifndef ADSP_DEFAULT_LISTENER_NAME
+-#define ADSP_DEFAULT_LISTENER_NAME "libadsp_default_listener.so"
++#define ADSP_DEFAULT_LISTENER_NAME "libadsp_default_listener.so.1"
+ #endif
+ #ifndef CDSP_DEFAULT_LISTENER_NAME
+-#define CDSP_DEFAULT_LISTENER_NAME "libcdsp_default_listener.so"
++#define CDSP_DEFAULT_LISTENER_NAME "libcdsp_default_listener.so.1"
+ #endif
+ #ifndef SDSP_DEFAULT_LISTENER_NAME
+-#define SDSP_DEFAULT_LISTENER_NAME "libsdsp_default_listener.so"
++#define SDSP_DEFAULT_LISTENER_NAME "libsdsp_default_listener.so.1"
+ #endif
+ #ifndef GDSP_DEFAULT_LISTENER_NAME
+ #define GDSP_DEFAULT_LISTENER_NAME "libcdsp_default_listener.so.1"
