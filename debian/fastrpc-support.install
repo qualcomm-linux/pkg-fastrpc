@@ -4,3 +4,4 @@ debian/guess-dsp.sh usr/share/fastrpc/
 usr/bin/adsprpcd usr/sbin
 usr/bin/cdsprpcd usr/sbin
 usr/bin/sdsprpcd usr/sbin
+usr/bin/gdsprpcd usr/sbin
