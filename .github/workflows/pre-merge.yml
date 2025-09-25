@@ -1,0 +1,21 @@
+name: Pre-merge
+description: |
+  Tests that with this PR, the package builds successfully.
+
+on:
+  pull_request_target:
+    branches: [ debian/latest ]
+
+permissions:
+ contents: read
+ security-events: write
+
+jobs:
+  build:
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-build-debian-package-reusable-workflow.yml@development
+    with:
+      qcom-build-utils-ref: development
+      debian-ref: ${{ github.head_ref }}
+
+    secrets:
+      ACTIONS_SSH_KEY: ${{ secrets.ACTIONS_SSH_KEY }}
