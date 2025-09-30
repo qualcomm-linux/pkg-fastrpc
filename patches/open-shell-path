@@ -1,14 +1,22 @@
-Author: Robie Basak <robie.basak@oss.qualcomm.com>
-Description: Use env var DSP_LIBRARY_PATH to find libraries
- This is set by guess-dsp.sh (currently in packaging) according to the DSP
- found on the hardware to the appropriate FHS path as provided by the
- hexagon-dsp-binaries package.
+From: Robie Basak <robie.basak@oss.qualcomm.com>
+Date: Tue, 30 Sep 2025 14:43:48 +0100
+Subject: Use env var DSP_LIBRARY_PATH to find libraries
+
 Forwarded: no
 Last-Update: 2025-09-02
 
+This is set by guess-dsp.sh (currently in packaging) according to the DSP
+found on the hardware to the appropriate FHS path as provided by the
+hexagon-dsp-binaries package.
+---
+ src/fastrpc_apps_user.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/src/fastrpc_apps_user.c b/src/fastrpc_apps_user.c
+index 81fef0a..c0aa93d 100644
 --- a/src/fastrpc_apps_user.c
 +++ b/src/fastrpc_apps_user.c
-@@ -3452,6 +3452,12 @@
+@@ -3442,6 +3442,12 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
    int nErr = AEE_SUCCESS;
    int domain = GET_DOMAIN_FROM_EFFEC_DOMAIN_ID(domain_id);
    const char *shell_name = SIGNED_SHELL;
@@ -21,7 +29,7 @@ Last-Update: 2025-09-02
  
    if (1 == unsigned_shell) {
      shell_name = UNSIGNED_SHELL;
-@@ -3491,11 +3497,11 @@
+@@ -3481,11 +3487,11 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
      nErr = apps_std_fopen(absName, "r", fh);
    }
    if (nErr) {
@@ -35,7 +43,7 @@ Last-Update: 2025-09-02
      strlcat(absName, shell_absName, absNameLen);
  
      nErr = apps_std_fopen(absName, "r", fh);
-@@ -3504,7 +3510,7 @@
+@@ -3494,7 +3500,7 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
        VERIFYC(NULL != (absName =
                             (char *)realloc(absName, sizeof(char) * absNameLen)),
                AEE_ENOMEMORY);
@@ -44,7 +52,7 @@ Last-Update: 2025-09-02
        strlcat(absName, SUBSYSTEM_NAME[domain], absNameLen);
        strlcat(absName, "/", absNameLen);
        strlcat(absName, shell_absName, absNameLen);
-@@ -3535,7 +3541,7 @@
+@@ -3525,7 +3531,7 @@ bail:
        FARF(ERROR,
             "Error 0x%x: %s failed for domain %d search paths used are %s, %s, "
             "%s (errno %s)\n",
