@@ -5,6 +5,7 @@ Section: misc
 Priority: optional
 Rules-Requires-Root: no
 Build-Depends: debhelper-compat (= 13)
+Homepage: https://github.com/qualcomm/fastrpc
 
 Package: libfastrpc1
 Architecture: arm64
