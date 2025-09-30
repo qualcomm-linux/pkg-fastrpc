@@ -4,6 +4,7 @@ Standards-Version: 4.6.2
 Section: misc
 Rules-Requires-Root: no
 Build-Depends: debhelper-compat (= 13)
+Homepage: https://github.com/qualcomm/fastrpc
 
 Package: libfastrpc1
 Architecture: arm64
