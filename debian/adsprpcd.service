@@ -1,7 +1,6 @@
 [Unit]
 Description=adsprpc Service
-Requires=dev-fastrpc\x2dadsp\x2dsecure.device
-After=dev-fastrpc\x2dadsp\x2dsecure.device
+After=dev-fastrpc\x2dadsp.device dev-fastrpc\x2dadsp\x2dsecure.device
 
 [Service]
 User=fastrpc
