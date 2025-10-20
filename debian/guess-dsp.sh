@@ -12,22 +12,22 @@ if [ -r /sys/firmware/devicetree/base/model ] ; then
 	MACHINE=`cat /sys/firmware/devicetree/base/model`
 	case "$MACHINE" in
 		*DB820c*)
-			DSP_LIBRARY_PATH=/usr/share/qcom/apq8096/Qualcomm/db820c/dsp
+			DSP_LIBRARY_PATH=/usr/share/hexagon-dsp/apq8096/Qualcomm/db820c/dsp
 			;;
 		*"Dragonboard 845c"*)
-			DSP_LIBRARY_PATH=/usr/share/qcom/sdm845/Thundercomm/db845c/dsp
+			DSP_LIBRARY_PATH=/usr/share/hexagon-dsp/sdm845/Thundercomm/db845c/dsp
 			;;
 		*"Robotics RB1"*)
-			DSP_LIBRARY_PATH=/usr/share/qcom/qcm2290/Thundercomm/RB1/dsp
+			DSP_LIBRARY_PATH=/usr/share/hexagon-dsp/qcm2290/Thundercomm/RB1/dsp
 			;;
 		*"QRB4210 RB2"*)
-			DSP_LIBRARY_PATH=/usr/share/qcom/qrb4210/Thundercomm/RB2/dsp
+			DSP_LIBRARY_PATH=/usr/share/hexagon-dsp/qrb4210/Thundercomm/RB2/dsp
 			;;
 		*"Robotics RB5"*)
-			DSP_LIBRARY_PATH=/usr/share/qcom/sm8250/Thundercomm/RB5/dsp
+			DSP_LIBRARY_PATH=/usr/share/hexagon-dsp/sm8250/Thundercomm/RB5/dsp
 			;;
 		*"Robotics RB3gen2"*)
-			DSP_LIBRARY_PATH=/usr/share/qcom/qcm6490/Thundercomm/RB3gen2/dsp
+			DSP_LIBRARY_PATH=/usr/share/hexagon-dsp/qcm6490/Thundercomm/RB3gen2/dsp
 			;;
 	esac
 fi
