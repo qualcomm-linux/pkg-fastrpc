@@ -1,5 +1,5 @@
-fastrpc (1.0.0-1) UNRELEASED; urgency=medium
+fastrpc (1.0.0-1) unstable; urgency=medium
 
-  * Initial packaging for fastrpc
+  * Initial packaging. (Closes: #1116042)
 
- -- Simon Beaudoin <sbeaudoi@qti.qualcomm.com>  Thu, 02 Oct 2025 11:01:53 +0000
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Thu, 30 Oct 2025 13:52:08 +0000
