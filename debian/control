@@ -3,7 +3,6 @@ Maintainer: Ekansh Gupta <ekangupt@qti.qualcomm.com>
 Standards-Version: 4.6.2
 Section: misc
 Priority: optional
-Rules-Requires-Root: no
 Build-Depends: debhelper-compat (= 13)
 Homepage: https://github.com/qualcomm/fastrpc
 
