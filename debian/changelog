@@ -1,17 +1,5 @@
-fastrpc (1.0.0-2) noble; urgency=medium
-
-  [ Simon Beaudoin ]
-  * Add debian/latest pre-merge and post-merge check workflow
-  * Start from 1.0.0-1 version
-  * Add extend-diff-ignore exclusion for the .github folder
-
-  [ GitHub Service Bot ]
-  * Merge commit after import of upstream 1.0.0.
-
- -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Tue, 21 Oct 2025 21:09:01 +0000
-
 fastrpc (1.0.0-1) unstable; urgency=medium
 
-  * Initial packaging for fastrpc
+  * Initial packaging. 
 
- -- Simon Beaudoin <sbeaudoi@qti.qualcomm.com>  Thu, 02 Oct 2025 11:01:53 +0000
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Thu, 30 Oct 2025 13:52:08 +0000
