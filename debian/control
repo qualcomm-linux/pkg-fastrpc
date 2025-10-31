@@ -26,7 +26,7 @@ Description: Qualcomm FastRPC - development files
  This package contains library headers for the shared libraries shipped in the
  libfastrpc1 package.
 Section: libdevel
-Depends: libfastrpc1 (= ${binary:Version} ), ${misc:Depends}
+Depends: libfastrpc1 (= ${binary:Version}), ${misc:Depends}
 
 Package: fastrpc-support
 Architecture: arm64
