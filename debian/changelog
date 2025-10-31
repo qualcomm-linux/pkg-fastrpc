@@ -1,4 +1,4 @@
-fastrpc (1.0.0-1proposed) noble; urgency=medium
+fastrpc (1.0.0-2) noble; urgency=medium
 
   [ Simon Beaudoin ]
   * Add debian/latest pre-merge and post-merge check workflow
