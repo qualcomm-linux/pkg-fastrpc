@@ -9,19 +9,19 @@ Homepage: https://github.com/qualcomm/fastrpc
 Package: libfastrpc1
 Architecture: arm64
 Description: Qualcomm FastRPC and library
- FastRPC is the Qualcomm-proprietary RPC mechanism used to enable remote
- function calls between the CPU and aDSP.
+ FastRPC is Qualcomm's userspace library that facilitates efficient remote
+ procedure calls between the CPU and DSP for high-performance computing.
  .
  This package contains the shared libraries libadsprpc, libcdsprpc, libsdsprpc,
- and their _default_listener counterparts.
+ and their *_default_listener counterparts.
 Section: libs
 Depends: ${misc:Depends}, ${shlibs:Depends}
 
 Package: libfastrpc-dev
 Architecture: arm64
 Description: Qualcomm FastRPC - development files
- FastRPC is the Qualcomm-proprietary RPC mechanism used to enable remote
- function calls between the CPU and aDSP. Development package.
+ FastRPC is Qualcomm's userspace library that facilitates efficient remote
+ procedure calls between the CPU and DSP for high-performance computing.
  .
  This package contains library headers for the shared libraries shipped in the
  libfastrpc1 package.
@@ -31,8 +31,8 @@ Depends: ${misc:Depends}, libfastrpc1 (= ${binary:Version} )
 Package: fastrpc-support
 Architecture: arm64
 Description: Qualcomm FastRPC - support daemons and udev rules
- FastRPC is the Qualcomm-proprietary RPC mechanism used to enable remote
- function calls between the CPU and aDSP. Development package.
+ FastRPC is Qualcomm's userspace library that facilitates efficient remote
+ procedure calls between the CPU and DSP for high-performance computing.
  .
  This package provides the necessary support daemons used to supply object code
  to the DSPs and the udev rules to make the DSPs available to users.
