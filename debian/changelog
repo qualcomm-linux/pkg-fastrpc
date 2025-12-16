@@ -1,3 +1,10 @@
+fastrpc (1.0.1-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+  * d/p/dlopen-abi-version: drop (fixed upstream).
+
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Tue, 16 Dec 2025 15:05:04 +0000
+
 fastrpc (1.0.0-1) unstable; urgency=medium
 
   * Initial packaging. (Closes: #1116042)
