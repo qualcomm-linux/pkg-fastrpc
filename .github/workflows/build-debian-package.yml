@@ -38,8 +38,7 @@ on:
           - lecore-prd-u2404-arm64-xlrg-od-ephem
 
 permissions:
- contents: read
- security-events: write
+  contents: read
 
 jobs:
   build:
@@ -49,7 +48,7 @@ jobs:
       debian-ref: ${{ inputs.debian-ref }}
       distro-codename: ${{ inputs.distro-codename }}
       run-abi-checker: ${{ inputs.abi-checker }}
-      push-to-repo: ${{ inputs.push-to-repo }}
+      is-post-merge: ${{ inputs.push-to-repo }}
       runner: ${{inputs.builder_runner}}
     secrets:
       TOKEN: ${{ secrets.DEB_PKG_BOT_CI_TOKEN }}
