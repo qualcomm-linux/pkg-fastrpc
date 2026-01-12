@@ -1,3 +1,91 @@
+fastrpc (1.0.2-1) UNRELEASED; urgency=medium
+
+  [ Dmitry Baryshkov ]
+  * Remove CR-LF from the rest of the files
+
+  [ Jianping Li ]
+  * Clean-up: Remove unused Android-specific DSP HAL code
+
+  [ Abhinav Parihar ]
+  * rpcmem: Register rpcmem-allocated buffers with fastrpc memory framework
+
+  [ Jianping Li ]
+  * Have a single source file for all daemons
+
+  [ Tharun Kumar Merugu ]
+  * CI: Docker-based pre-merge pipeline for FastRPC
+
+  [ Ling Xu ]
+  * Add changes to support GPDSPs offloading
+
+  [ Tharun Kumar Merugu ]
+  * CI: Switch all reusable workflow references to 'development' branch (#233)
+
+  [ Ekansh Gupta ]
+  * inc: drop AEEStdDef.h from rpcmem.h to fix build
+
+  [ Vinayak Katoch ]
+  * test: Update fastrpc_test to append library paths
+  * test: Update fastrpc_test README for install and run
+  * Reduce log verbosity to prevent syslog flooding
+  * Remove PRINT_WARN_USE_DOMAINS macro completely
+
+  [ Tharun Kumar Merugu ]
+  * Fix ramdisk unpack and repack logic for fastrpc validation (#238)
+  * CI: Automate fastrpc deployment
+
+  [ Abhinav Parihar ]
+  * Enable PD exception logging by default
+
+  [ Tharun Kumar Merugu ]
+  * Matrix Consolidation & Simplified LAVA Machine Assignment
+  * CI Update: Refactored pull_request_target Workflow
+  * CI Optimization: Ignore .github Directory in Workflow Trigger
+
+  [ Vinayak Katoch ]
+  * Add GitHub Actions workflow for ABI/API compatibility check
+
+  [ Tharun Kumar Merugu ]
+  * Target-Specific Enhancements: qcs6490 Support & Path Resolution
+  * Flexible Matching Logic for Target Path Resolution
+  * Attribute Renaming: Standardized Target Configuration Fields
+
+  [ Thirumalai Nagalingam ]
+  * dsprpcd: dlopen versioned listener libraries with fallback
+
+  [ Srinivas Kandagatla ]
+  * inc: add required include files at instal
+
+  [ Aman Pandey ]
+  * Move pthread_key_create initialization earlier in fastrpc_apps_user_init
+
+  [ Jianping Li ]
+  * Fix PD exception logging
+
+  [ Tharun Kumar Merugu ]
+  * Enable ARMOR public API compatibility checks and header validation
+  * Add GitHub Actions workflow for ARMOR API/ABI monitoring
+
+  [ Vinayak Katoch ]
+  * test: Update examples and test runner with improved error handling
+
+  [ Abhinav Parihar ]
+  * Support dynamic DSP path resolution via conf directory
+  * Fix envlistlen overwrite when fetching from non-DSP library environment paths
+  * Update build steps to include libyaml-dev and apt-get update
+
+  [ Vinayak Katoch ]
+  * fix: Link test libs to corrected version libcdsprpc.so.1
+
+  [ Abhinav Parihar ]
+  * Build domain-correct paths
+  * Clean up shell open logs
+
+  [ Simon Beaudoin ]
+  * Moved pre/post merge workflows to main branch
+
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 12 Jan 2026 22:02:10 +0000
+
 fastrpc (1.0.0-1) unstable; urgency=medium
 
   * Initial packaging. (Closes: #1116042)
