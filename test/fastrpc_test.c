@@ -11,6 +11,8 @@
 #include <errno.h>
 #include <limits.h>  // For PATH_MAX
 
+#define DSP_AEE_EUNSUPPORTED 0x80000414
+
 typedef int (*run_test_t)(int domain_id, bool is_unsignedpd_enabled);
 
 static void print_usage() {
@@ -49,6 +51,10 @@ int main(int argc, char *argv[]) {
     void *lib_handle = NULL;
     run_test_t run_test = NULL;
     int nErr = 0;
+    int tests_run = 0;
+    int tests_passed = 0;
+    int tests_failed = 0;
+    int tests_skipped = 0;
 
     int opt;
     while ((opt = getopt(argc, argv, "d:U:t:a:")) != -1) {
@@ -127,10 +133,17 @@ int main(int argc, char *argv[]) {
             }
 
             nErr = run_test(domain_id, is_unsignedpd_enabled);
-            if (nErr != 0) {
-                printf("Test failed with error code 0x%x in %s\n", nErr, full_lib_path);
+            tests_run++;
+
+            if (nErr == 0) {
+                tests_passed++;
+                printf("[PASS] %s\n\n", entry->d_name);
+            } else if (nErr == DSP_AEE_EUNSUPPORTED) {
+                tests_skipped++;
+                printf("[SKIP] %s (not applicable to this hardware)\n\n", entry->d_name);
             } else {
-                printf("Success in %s\n", full_lib_path);
+                tests_failed++;
+                printf("[FAIL] %s (error code: 0x%x)\n\n", entry->d_name, nErr);
             }
 
             dlclose(lib_handle);
@@ -139,11 +152,29 @@ int main(int argc, char *argv[]) {
 
     closedir(dir);
 
-    if (nErr != 0) {
-        printf("Test failed with error code 0x%x\n", nErr);
-    } else {
-        printf("All tests completed successfully\n");
+    printf("\n========================================\n");
+    printf("Test Summary:\n");
+    printf("  Total tests run:    %d\n", tests_run);
+    printf("  Passed:             %d\n", tests_passed);
+    printf("  Failed:             %d\n", tests_failed);
+    printf("  Skipped:            %d\n", tests_skipped);
+    printf("========================================\n");
+
+    if (tests_run == 0) {
+        printf("\nERROR: No tests were found or executed.\n");
+        return -1;
     }
 
-    return nErr;
+    if (tests_failed > 0) {
+        printf("\nRESULT: %d test(s) FAILED\n", tests_failed);
+        return tests_failed;
+    }
+
+    if (tests_passed == 0 && tests_skipped > 0) {
+        printf("\nWARNING: All tests were skipped. No applicable tests for this hardware.\n");
+        return -1;
+    }
+
+    printf("\nRESULT: All applicable tests PASSED\n");
+    return 0;
 }

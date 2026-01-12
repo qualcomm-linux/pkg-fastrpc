@@ -1,0 +1,1 @@
+machines: map(key=str(), value=map(DSP_LIBRARY_PATH=regex('^/.+/')))
