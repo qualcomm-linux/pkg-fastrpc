@@ -29,6 +29,9 @@ if [ -r /sys/firmware/devicetree/base/model ] ; then
 		*"Robotics RB3gen2"*)
 			DSP_LIBRARY_PATH=/usr/share/qcom/qcm6490/Thundercomm/RB3gen2/dsp
 			;;
+		*"Hamoa IoT EVK"*)
+			DSP_LIBRARY_PATH=/usr/share/qcom/x1e80100/Qualcomm/Hamoa-IoT-EVK/dsp
+			;;
 	esac
 fi
 
