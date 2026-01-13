@@ -1,8 +1,19 @@
 fastrpc (1.0.2-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * d/p/dlopen-abi-version: drop (fixed upstream).
+  * d/gbp.conf: set upstream tag pattern.
+  * Implement new upstream search path configuration:
+    - d/control: Build-Depend on libyaml-dev and pkgconf
+    - d/rules: --with-config-base-dir=/usr/share/hexagon-dsp
+    - d/p/open-shell-path: drop (no longer required)
+    - Drop d/guess-dsp.sh (no longer required):
+      + d/{a,c}dsprpcd.service: invoke without guess-dsp.sh
+      + d/fastrpc-support.install: do not install guess-dsp.sh
+      + d/guess-dsp.sh: remove
+      + d/copyright: drop guess-dsp.sh licensing information
 
- -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Thu, 15 Jan 2026 19:58:21 +0000
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Thu, 15 Jan 2026 19:58:21 +0000
 
 fastrpc (1.0.0-1) unstable; urgency=medium
 
