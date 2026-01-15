@@ -1,6 +1,12 @@
 lib_LTLIBRARIES =
 
-LIBDSPRPC_CFLAGS = -fno-short-enums -U_DEBUG -DARM_ARCH_7A -DLE_ENABLE -DENABLE_UPSTREAM_DRIVER_INTERFACE -DUSE_SYSLOG -I$(top_srcdir)/inc
+LIBDSPRPC_CFLAGS = -fno-short-enums -U_DEBUG -DARM_ARCH_7A -DLE_ENABLE -DENABLE_UPSTREAM_DRIVER_INTERFACE -DUSE_SYSLOG -DCONFIG_BASE_DIR='"$(CONFIG_BASE_DIR)"' -DMACHINE_NAME_PATH='"/sys/firmware/devicetree/base/model"' -I$(top_srcdir)/inc
+
+if ANDROID_CC
+LIBDSPRPC_CFLAGS += -DDEFAULT_DSP_SEARCH_PATHS='";/vendor/lib/rfsa/adsp;/vendor/dsp;"'
+else
+LIBDSPRPC_CFLAGS += -DPARSE_YAML @YAML_CFLAGS@ -DDEFAULT_DSP_SEARCH_PATHS='";/usr/lib/rfsa/adsp;/usr/lib/dsp;"'
+endif
 
 LIBDSPRPC_SOURCES = \
 		fastrpc_apps_user.c \
@@ -48,6 +54,12 @@ LIBDSPRPC_SOURCES = \
 		mod_table.c \
 		fastrpc_context.c
 
+if ANDROID_CC
+# Do nothing (or Android-specific sources)
+else
+LIBDSPRPC_SOURCES += fastrpc_config_parser.c
+endif
+
 LIBDEFAULT_LISTENER_SOURCES = \
 				adsp_default_listener.c \
 				adsp_default_listener_stub.c \
@@ -55,6 +67,12 @@ LIBDEFAULT_LISTENER_SOURCES = \
 
 if ANDROID_CC
 USE_LOG = -llog
+else
+# Add YAML libs to link flags for non-Android builds
+libadsprpc_la_LIBADD = @YAML_LIBS@
+libcdsprpc_la_LIBADD = @YAML_LIBS@
+libsdsprpc_la_LIBADD = @YAML_LIBS@
+libgdsprpc_la_LIBADD = @YAML_LIBS@
 endif
 
 ADSP_CFLAGS = $(LIBDSPRPC_CFLAGS) -DDEFAULT_DOMAIN_ID=0

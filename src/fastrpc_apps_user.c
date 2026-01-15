@@ -75,16 +75,12 @@
 #include "fastrpc_context.h"
 #include "fastrpc_process_attributes.h"
 #include "fastrpc_trace.h"
+#include "fastrpc_config_parser.h"
 
-#ifndef ENABLE_UPSTREAM_DRIVER_INTERFACE
-#define DSP_MOUNT_LOCATION "/dsp/"
-#define DSP_DOM_LOCATION "/dsp/xdsp"
-#else
-#define DSP_MOUNT_LOCATION "/usr/lib/dsp/"
-#define DSP_DOM_LOCATION "/usr/lib/dsp/xdspn"
-#endif
 #define VENDOR_DSP_LOCATION "/vendor/dsp/"
 #define VENDOR_DOM_LOCATION "/vendor/dsp/xdsp/"
+
+char DSP_LIBS_LOCATION[PATH_MAX] = DEFAULT_DSP_SEARCH_PATHS;
 
 #ifdef LE_ENABLE
 #define PROPERTY_VALUE_MAX                                                     \
@@ -3437,8 +3433,8 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
   char *absName = NULL;
   char *shell_absName = NULL;
   char *domain_str = NULL;
+  char dir_list[PATH_MAX] = {0};
   uint16_t shell_absNameLen = 0, absNameLen = 0;
-  ;
   int nErr = AEE_SUCCESS;
   int domain = GET_DOMAIN_FROM_EFFEC_DOMAIN_ID(domain_id);
   const char *shell_name = SIGNED_SHELL;
@@ -3459,27 +3455,11 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
               (shell_absName = (char *)malloc(sizeof(char) * shell_absNameLen)),
           AEE_ENOMEMORY);
   strlcpy(shell_absName, shell_name, shell_absNameLen);
-
   strlcat(shell_absName, domain_str, shell_absNameLen);
 
-  absNameLen = strlen(DSP_MOUNT_LOCATION) + shell_absNameLen + 1;
-  VERIFYC(NULL != (absName = (char *)malloc(sizeof(char) * absNameLen)),
-          AEE_ENOMEMORY);
-  strlcpy(absName, DSP_MOUNT_LOCATION, absNameLen);
-  strlcat(absName, shell_absName, absNameLen);
+  strlcpy(dir_list, DSP_LIBS_LOCATION, sizeof(dir_list));
+  nErr = fopen_from_dirlist(dir_list, ";", "r", shell_absName, fh);
 
-  nErr = apps_std_fopen(absName, "r", fh);
-  if (nErr) {
-    absNameLen = strlen(DSP_DOM_LOCATION) + shell_absNameLen + 1;
-    VERIFYC(NULL !=
-                (absName = (char *)realloc(absName, sizeof(char) * absNameLen)),
-            AEE_ENOMEMORY);
-    strlcpy(absName, DSP_MOUNT_LOCATION, absNameLen);
-    strlcat(absName, SUBSYSTEM_NAME[domain], absNameLen);
-    strlcat(absName, "/", absNameLen);
-    strlcat(absName, shell_absName, absNameLen);
-    nErr = apps_std_fopen(absName, "r", fh);
-  }
   if (nErr) {
     absNameLen = strlen(VENDOR_DSP_LOCATION) + shell_absNameLen + 1;
     VERIFYC(NULL !=
@@ -3503,7 +3483,7 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
     }
   }
   if (!nErr)
-    FARF(RUNTIME_RPC_HIGH, "Successfully opened %s, domain %d", absName, domain);
+    FARF(RUNTIME_RPC_HIGH, "Successfully opened %s, domain %d", shell_absName, domain);
 bail:
   if (domain_str) {
     free(domain_str);
@@ -3523,10 +3503,9 @@ bail:
       *fh = -1;
     } else {
       FARF(ERROR,
-           "Error 0x%x: %s failed for domain %d search paths used are %s, %s, "
-           "%s (errno %s)\n",
-           nErr, __func__, domain, DSP_MOUNT_LOCATION, VENDOR_DSP_LOCATION,
-           VENDOR_DOM_LOCATION, strerror(errno));
+           "Error 0x%x: %s failed for domain %d search paths used are %s "
+           "(errno %s)\n",
+           nErr, __func__, domain, DSP_LIBS_LOCATION, strerror(errno));
     }
   }
   return nErr;
@@ -4040,15 +4019,6 @@ static int domain_init(int domain, int *dev) {
                 ret == (int)(DSP_AEE_EOFFSET + AEE_EUNSUPPORTED),
             ret);
   }
-#ifdef PD_EXCEPTION_LOGGING
-  if ((dom != SDSP_DOMAIN_ID) && hlist[domain].dsppd == ROOT_PD) {
-    remote_handle64 handle = 0;
-    handle = get_adspmsgd_adsp1_handle(domain);
-    if (handle != INVALID_HANDLE) {
-      adspmsgd_init(handle, 0x10); // enable PD exception logging
-    }
-  }
-#endif
   fastrpc_perf_init(hlist[domain].dev, domain);
   VERIFY(AEE_SUCCESS ==
          (nErr = fastrpc_latency_init(hlist[domain].dev, &hlist[domain].qos)));
@@ -4059,6 +4029,13 @@ static int domain_init(int domain, int *dev) {
   VERIFY(AEE_SUCCESS == (nErr = listener_android_domain_init(
                              domain, hlist[domain].th_params.update_requested,
                              &hlist[domain].th_params.r_sem)));
+  if ((dom != SDSP_DOMAIN_ID) && hlist[domain].dsppd == ROOT_PD) {
+    remote_handle64 handle = 0;
+    handle = get_adspmsgd_adsp1_handle(domain);
+    if (handle != INVALID_HANDLE) {
+      adspmsgd_init(handle, 0x10); // enable PD exception logging
+    }
+  }
 bail:
   if (nErr != AEE_SUCCESS) {
     domain_deinit(domain);
@@ -4157,6 +4134,10 @@ static void exit_thread(void *value) {
   pthread_setspecific(tlsKey, (void *)NULL);
 }
 
+const char* get_dsp_search_path() {
+  return DSP_LIBS_LOCATION;
+}
+
 /*
  * Called only once by fastrpc_init_once
  * Initializes the data structures
@@ -4171,6 +4152,10 @@ static int fastrpc_apps_user_init(void) {
 
   VERIFY(AEE_SUCCESS == (nErr = PL_INIT(gpls)));
   VERIFY(AEE_SUCCESS == (nErr = PL_INIT(rpcmem)));
+  VERIFY(AEE_SUCCESS == (nErr = pthread_key_create(&tlsKey, exit_thread)));
+#ifdef PARSE_YAML
+  configure_dsp_paths();
+#endif
   fastrpc_mem_init();
   fastrpc_context_table_init();
   fastrpc_log_init();
@@ -4201,7 +4186,6 @@ static int fastrpc_apps_user_init(void) {
     pthread_mutex_init(&hlist[i].async_init_deinit_mut, 0);
   }
   listener_android_init();
-  VERIFY(AEE_SUCCESS == (nErr = pthread_key_create(&tlsKey, exit_thread)));
   VERIFY(AEE_SUCCESS == (nErr = PL_INIT(apps_std)));
   GenCrc32Tab(POLY32, crc_table);
   fastrpc_notif_init();

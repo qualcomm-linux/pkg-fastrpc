@@ -43,6 +43,26 @@ AM_PROG_CC_C_O
 
 # Checks for library functions.
 
+# Enable pkg-config
+PKG_PROG_PKG_CONFIG
+
+# Check for libyaml only if not Android
+AS_IF([test "$compile_for_android" = no], [
+  PKG_CHECK_MODULES([YAML], [yaml-0.1], [],
+    [AC_MSG_ERROR([libyaml (yaml-0.1) is required but not found.])])
+  AC_SUBST(YAML_CFLAGS)
+  AC_SUBST(YAML_LIBS)
+])
+
+# Configure config base path option (--with-config-base-dir)
+AC_ARG_WITH([config-base-dir],
+  [AS_HELP_STRING([--with-config-base-dir=PATH],
+                  [Base directory for config files (default: /usr/share/qcom)])],
+  [config_base_dir="$withval"],
+  [config_base_dir="/usr/share/qcom/"])
+AC_MSG_NOTICE([Config base path: $config_base_dir])
+AC_SUBST([CONFIG_BASE_DIR], ["$config_base_dir"])
+
 AC_CONFIG_FILES([
 Makefile
 inc/Makefile
