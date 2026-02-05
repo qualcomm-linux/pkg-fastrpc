@@ -7,4 +7,4 @@ User=fastrpc
 Group=fastrpc
 Restart=always
 Type=exec
-ExecStart=/bin/sh -c '. /usr/share/fastrpc/guess-dsp.sh && /usr/sbin/adsprpcd'
+ExecStart=/usr/sbin/adsprpcd

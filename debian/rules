@@ -3,6 +3,9 @@
 %:
 	dh $@ --with autoreconf
 
+override_dh_auto_configure:
+	dh_auto_configure -- --with-config-base-dir=/usr/share/hexagon-dsp
+
 override_dh_installsystemd:
 	dh_installsystemd -p fastrpc-support adsprpcd.service cdsprpcd.service
 

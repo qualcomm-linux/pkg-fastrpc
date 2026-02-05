@@ -1,16 +1,16 @@
 # Export fastrpc headers
 fastrpc_includedir       = $(includedir)/fastrpc
 fastrpc_include_HEADERS  = $(top_srcdir)/inc/AEEStdErr.h
+fastrpc_include_HEADERS += $(top_srcdir)/inc/AEEStdDef.h
 fastrpc_include_HEADERS += $(top_srcdir)/inc/remote.h
 fastrpc_include_HEADERS += $(top_srcdir)/inc/rpcmem.h
+fastrpc_include_HEADERS += $(top_srcdir)/inc/HAP_farf.h
+fastrpc_include_HEADERS += $(top_srcdir)/inc/HAP_debug.h
 
 noinst_HEADERS = \
 	AEEBufBound.h \
 	AEEQList.h \
-	AEEStdDef.h \
 	AEEstd.h \
-	HAP_debug.h \
-	HAP_farf.h \
 	HAP_farf_internal.h \
 	HAP_pls.h \
 	adsp_current_process.h \
@@ -40,6 +40,7 @@ noinst_HEADERS = \
 	fastrpc_cap.h \
 	fastrpc_common.h \
 	fastrpc_config.h \
+	fastrpc_config_parser.h \
 	fastrpc_context.h \
 	fastrpc_hash_table.h \
 	fastrpc_internal.h \

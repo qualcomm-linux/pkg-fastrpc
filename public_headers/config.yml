@@ -1,0 +1,11 @@
+project: https://github.com/qualcomm/fastrpc
+
+branches:
+  development:
+    modes:
+      blocking:
+        headers:
+          - inc/remote.h
+          - inc/remote64.h
+          - inc/dspqueue.h
+          - inc/rpcmem.h
