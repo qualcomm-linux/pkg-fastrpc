@@ -1,5 +1,6 @@
 fastrpc (1.0.2-1) UNRELEASED; urgency=medium
 
+  [ Robie Basak ]
   * New upstream release
   * d/p/dlopen-abi-version: drop (fixed upstream).
   * d/gbp.conf: set upstream tag pattern.
@@ -12,6 +13,11 @@ fastrpc (1.0.2-1) UNRELEASED; urgency=medium
       + d/fastrpc-support.install: do not install guess-dsp.sh
       + d/guess-dsp.sh: remove
       + d/copyright: drop guess-dsp.sh licensing information
+
+  [ Loïc Minier ]
+  * Use a Recommends for the fastrpc-support dep on
+    hexagon-dsp-binaries instead of a Depends. This notably allows
+    picking a particular platform or bringing one's own firmware.
 
  -- Robie Basak <robie.basak@oss.qualcomm.com>  Thu, 15 Jan 2026 19:58:21 +0000
 
