@@ -1,3 +1,11 @@
+fastrpc (1.0.2-1~bpo~qcom1) trixie; urgency=medium
+
+  * Backport to trixie.
+  * Re-add test suite temporarily in our apt overlay pending proper fix
+    upstream before it can go into Debian itself.
+
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Wed, 18 Feb 2026 13:45:08 +0000
+
 fastrpc (1.0.2-1) unstable; urgency=medium
 
   * New upstream release
