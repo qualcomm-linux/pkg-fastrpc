@@ -19,6 +19,9 @@ on:
         options:
           - noble
           - questing
+          - resolute
+          - trixie
+          - sid
 
       abi-checker:
         description: Run the ABI checker or not
