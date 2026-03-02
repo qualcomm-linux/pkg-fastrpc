@@ -7,10 +7,10 @@ on:
     inputs:
 
       debian-ref:
-        description: The debian ref to build. For example branch "debian/latest" or tag "debian/1.0.0-1"
+        description: The debian ref to build. For example branch "debian/qcom-next" or tag "debian/1.0.0-1"
         type: string
         required: true
-        default: debian/latest
+        default: debian/qcom-next
 
       distro-codename:
         description: The distribution codename to build for. Ex noble, questing, etc
@@ -33,13 +33,6 @@ on:
         type: boolean
         default: false
 
-      builder_runner:
-        type: choice
-        default: ubuntu-latest
-        options:
-          - ubuntu-latest
-          - lecore-prd-u2404-arm64-xlrg-od-ephem
-
 permissions:
   contents: read
 
@@ -52,6 +45,4 @@ jobs:
       distro-codename: ${{ inputs.distro-codename }}
       run-abi-checker: ${{ inputs.abi-checker }}
       is-post-merge: ${{ inputs.push-to-repo }}
-      runner: ${{inputs.builder_runner}}
-    secrets:
-      TOKEN: ${{ secrets.DEB_PKG_BOT_CI_TOKEN }}
+    secrets: inherit
