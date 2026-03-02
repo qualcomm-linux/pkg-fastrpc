@@ -28,5 +28,4 @@ jobs:
       debian-branch: ${{inputs.debian-branch}}
       upstream-tag: ${{inputs.upstream-tag}}
       upstream-repo: ${{vars.UPSTREAM_REPO_GITHUB_NAME}}
-    secrets:
-      TOKEN: ${{secrets.DEB_PKG_BOT_CI_TOKEN}}
+    secrets: inherit
