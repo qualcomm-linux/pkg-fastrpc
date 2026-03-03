@@ -14,13 +14,9 @@ on:
         options:
           - noble
           - questing
-
-      runner:
-        type: choice
-        default: ubuntu-latest
-        options:
-          - ubuntu-latest
-          - lecore-prd-u2404-arm64-xlrg-od-ephem
+          - resolute
+          - trixie
+          - sid
 
       test-run:
         description: |
@@ -40,7 +36,4 @@ jobs:
       qcom-build-utils-ref: main
       distro-codename: ${{ github.event.inputs.distro-codename }}
       test-run: ${{ github.event.inputs.test-run == 'true' && true || false }}
-      runner: ${{ github.event.inputs.runner }}
-
-    secrets:
-      TOKEN: ${{secrets.DEB_PKG_BOT_CI_TOKEN}}
+    secrets: inherit
