@@ -1,8 +1,15 @@
-fastrpc (1.0.2-2~) UNRELEASED; urgency=medium
+fastrpc (1.0.2-2) unstable; urgency=medium
 
-  * 
+  [ Loïc Minier ]
+  * Use a Recommends for the fastrpc-support dep on
+    hexagon-dsp-binaries instead of a Depends. This notably allows
+    picking a particular platform or bringing one's own firmware.
 
- -- Robie Basak <robie.basak@oss.qualcomm.com>  Wed, 18 Feb 2026 11:42:25 +0000
+  [ Robie Basak ]
+  * Move package to contrib section. Closes: #1130492.
+  * d/control: drop redundant Priority: optional field.
+
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Wed, 18 Mar 2026 10:06:30 +0000
 
 fastrpc (1.0.2-1) unstable; urgency=medium
 
