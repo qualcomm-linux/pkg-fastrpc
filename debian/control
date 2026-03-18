@@ -2,7 +2,6 @@ Source: fastrpc
 Maintainer: Robie Basak <robie.basak@oss.qualcomm.com>
 Standards-Version: 4.6.2
 Section: contrib/misc
-Priority: optional
 Build-Depends: debhelper-compat (= 13), libyaml-dev, pkgconf
 Homepage: https://github.com/qualcomm/fastrpc
 Vcs-Git: https://github.com/qualcomm-linux/pkg-fastrpc -b debian/latest
