@@ -1,7 +1,7 @@
 Source: fastrpc
 Maintainer: Robie Basak <robie.basak@oss.qualcomm.com>
 Standards-Version: 4.6.2
-Section: misc
+Section: contrib/misc
 Priority: optional
 Build-Depends: debhelper-compat (= 13), libyaml-dev, pkgconf
 Homepage: https://github.com/qualcomm/fastrpc
@@ -16,7 +16,7 @@ Description: Qualcomm FastRPC and library
  .
  This package contains the shared libraries libadsprpc, libcdsprpc, libsdsprpc,
  and their *_default_listener counterparts.
-Section: libs
+Section: contrib/libs
 Depends: ${misc:Depends}, ${shlibs:Depends}
 
 Package: libfastrpc-dev
@@ -27,7 +27,7 @@ Description: Qualcomm FastRPC - development files
  .
  This package contains library headers for the shared libraries shipped in the
  libfastrpc1 package.
-Section: libdevel
+Section: contrib/libdevel
 Depends: libfastrpc1 (= ${binary:Version}), ${misc:Depends}
 
 Package: fastrpc-support
