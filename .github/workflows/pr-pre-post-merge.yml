@@ -4,7 +4,6 @@ description: |
   When a PR is opened, synchronized or reopened against debian/qcom-next, this workflow will test that the package builds successfully inside the PR.
   The user will want to mark this check as required in branch protection rules to ensure that PRs cannot be merged unless the package builds successfully.
   When a PR is closed AND merged, this workflow will test that debian/qcom-next builds successfully and push the new package to the staging repo.
-  This is controled by the is-post-merge input to the reusable workflow, which is set based on the PR action and merged status.
   This workflow will explicitely NOT run on closed but unmerged PRs to avoid unnecessary builds (say in the case of a declined PR)
 
 on:
@@ -27,6 +26,4 @@ jobs:
       # POST-MERGE: use the base branch name from the PR (e.g. "debian/qcom-next")
       debian-ref: ${{ (github.event.action == 'closed' && github.event.pull_request.merged) && github.event.pull_request.base.ref || github.head_ref }}
       run-abi-checker: true
-       # True if the PR was merged (i.e. post-merge): closed & merged
-      is-post-merge: ${{ github.event.action == 'closed' && github.event.pull_request.merged == true }}
     secrets: inherit
