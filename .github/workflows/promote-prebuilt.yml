@@ -37,12 +37,12 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   promote:
-    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-promote-prebuilt-reusable-workflow.yml@dev/pkg-bin
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-promote-prebuilt-reusable-workflow.yml@development
     with:
-      qcom-build-utils-ref: dev/pkg-bin
       debian-branch: ${{inputs.debian-branch}}
       new-tag: ${{inputs.new-tag}}
       new-package-name: ${{inputs.new-package-name}}

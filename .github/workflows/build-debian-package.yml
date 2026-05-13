@@ -12,15 +12,18 @@ on:
         required: true
         default: debian/qcom-next
 
-      distro-codename:
-        description: The distribution codename to build for. Ex noble, questing, etc
+      suite:
+        description: The distribution codename or Debian suite to build for. Ex noble, questing, resolute, trixie, sid, unstable
         type: choice
         default: noble
         options:
           - noble
           - questing
           - resolute
+          - unstable
+          - forky
           - trixie
+          - bookworm
           - sid
 
       abi-checker:
@@ -31,12 +34,16 @@ on:
 permissions:
   contents: read
   packages: read
+  id-token: write
 
 jobs:
   build:
-    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-build-pkg-reusable-workflow.yml@main
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-build-pkg-reusable-workflow.yml@development
     with:
-      qcom-build-utils-ref: main
       debian-ref: ${{ inputs.debian-ref }}
-      distro-codename: ${{ inputs.distro-codename }}
+      suite: ${{ inputs.suite }}
+      debusine-parent-workspace: ${{ vars.DEBUSINE_PARENT_WORKSPACE || 'ci' }}
       run-abi-checker: ${{ inputs.abi-checker }}
+    secrets:
+      DEBUSINE_USER: ${{ secrets.DEBUSINE_USER }}
+      DEBUSINE_TOKEN: ${{ secrets.DEBUSINE_TOKEN }}

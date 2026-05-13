@@ -19,15 +19,15 @@ permissions:
   contents: write
   packages: read
   pull-requests: write
+  id-token: write
 
 jobs:
   promote:
 
-    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-promote-upstream-reusable-workflow.yml@main
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-promote-upstream-reusable-workflow.yml@development
     with:
-      qcom-build-utils-ref: main
       debian-branch: ${{inputs.debian-branch}}
       upstream-tag: ${{inputs.upstream-tag}}
       upstream-repo: ${{vars.UPSTREAM_REPO_GITHUB_NAME}}
     secrets:
-      PAT: ${{secrets.DEB_PKG_BOT_CI_TOKEN}} # If the source repo is private, this secret is necessary to be provided in the repo
+      PAT: ${{ secrets.DEB_PKG_BOT_CI_TOKEN }} # If the source repo is private, this secret is necessary to be provided in the repo
