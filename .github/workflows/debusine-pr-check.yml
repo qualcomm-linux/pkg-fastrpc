@@ -15,16 +15,19 @@ permissions:
   contents: write
   deployments: write
   statuses: write
+  id-token: write
+  packages: read
 
 jobs:
   debusine:
     name: Debusine
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: qualcomm-linux/debusine-action/.github/workflows/debusine.yml@main
+    uses: qualcomm-linux/debusine-action/.github/workflows/debusine.yml@dev/sbeaudoi
     with:
       source_ref: refs/pull/${{ github.event.workflow_run.pull_requests[0].number }}/merge
       target_branch: ${{ github.event.workflow_run.pull_requests[0].base.ref }}
       release: false
+      debusine-parent-workspace: ${{ vars.DEBUSINE_PARENT_WORKSPACE || 'ci' }}
     secrets:
       DEBUSINE_USER: ${{ secrets.DEBUSINE_USER }}
       DEBUSINE_TOKEN: ${{ secrets.DEBUSINE_TOKEN }}

@@ -48,15 +48,18 @@ jobs:
       fail-fast: false
       matrix:
         target_branch: ${{ fromJson(needs.check-branches.outputs.matrix) }}
-    uses: qualcomm-linux/debusine-action/.github/workflows/debusine.yml@main
+    uses: qualcomm-linux/debusine-action/.github/workflows/debusine.yml@dev/sbeaudoi
     with:
       target_branch: ${{ matrix.target_branch }}
       source_ref: refs/heads/${{ matrix.target_branch }}
       release: false
+      debusine-parent-workspace: ${{ vars.DEBUSINE_PARENT_WORKSPACE || 'ci' }}
       job_index: ${{ strategy.job-index }}
     permissions:
       contents: write
       deployments: write
+      id-token: write
+      packages: read
     secrets:
       DEBUSINE_USER: ${{ secrets.DEBUSINE_USER }}
       DEBUSINE_TOKEN: ${{ secrets.DEBUSINE_TOKEN }}
