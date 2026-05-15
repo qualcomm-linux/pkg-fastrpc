@@ -34,12 +34,12 @@ on:
 permissions:
   contents: read
   packages: read
-  id-token: write
 
 jobs:
   build:
     uses: qualcomm-linux/qcom-build-utils/.github/workflows/qcom-build-pkg-reusable-workflow.yml@development
     with:
+      qcom-build-utils-ref: development
       debian-ref: ${{ inputs.debian-ref }}
       suite: ${{ inputs.suite }}
       debusine-parent-workspace: ${{ vars.DEBUSINE_PARENT_WORKSPACE || 'ci' }}
