@@ -1,8 +1,9 @@
-fastrpc (1.0.0-2) UNRELEASED; urgency=medium
+fastrpc (1.0.0-2) unstable; urgency=medium
 
+  [ Ekansh Gupta ]
   * Initial commit
 
- -- Ekansh Gupta <ekangupt@qti.qualcomm.com>  Tue, 28 Apr 2026 15:37:20 +0000
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 18 May 2026 23:44:39 +0000
 
 fastrpc (1.0.0-1) unstable; urgency=medium
 
