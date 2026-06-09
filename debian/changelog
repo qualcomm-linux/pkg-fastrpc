@@ -1,8 +1,9 @@
-fastrpc (1.0.2-1~bpo~qcom3~) UNRELEASED; urgency=medium
+fastrpc (1.0.2-1~bpo~qcom3) trixie; urgency=medium
 
+  [ Robie Basak ]
   * No change rebuild for migration to Debusine production
 
- --  Robie Basak <robie.basak@oss.qualcomm.com>  Sun, 03 May 2026 11:18:22 +0000
+ -- root <root@a81f22d87501>  Tue, 09 Jun 2026 13:19:13 +0000
 
 fastrpc (1.0.2-1~bpo~qcom2) trixie; urgency=medium
 
