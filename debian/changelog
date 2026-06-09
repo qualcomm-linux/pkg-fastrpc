@@ -1,8 +1,8 @@
 fastrpc (1.0.2-1~bpo~qcom3~) UNRELEASED; urgency=medium
 
-  * Unreleased changes
+  * No change rebuild for migration to Debusine production
 
- --  <runner@runnervmeorf1.gqycc2zpl1wenkeeoydy3zbfbh.dx.internal.cloudapp.net>  Sun, 03 May 2026 11:18:22 +0000
+ --  Robie Basak <robie.basak@oss.qualcomm.com>  Sun, 03 May 2026 11:18:22 +0000
 
 fastrpc (1.0.2-1~bpo~qcom2) trixie; urgency=medium
 
