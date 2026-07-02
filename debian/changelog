@@ -2,6 +2,7 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
   [ Robie Basak ]
   * New upstream release
+  * d/control: add libbsd-dev build-dependency.
   * d/p/dlopen-abi-version: drop (fixed upstream).
   * d/gbp.conf: set upstream tag pattern.
   * Implement new upstream search path configuration:
