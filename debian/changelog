@@ -1,7 +1,7 @@
 fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
-  [ Robie Basak ]
-  * 
+  [ Simon Beaudoin   ]
+  * d/control: Add libbsd-dev dependency
 
   [ GitHub Service Bot ]
   * New upstream release
