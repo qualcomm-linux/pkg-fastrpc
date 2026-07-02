@@ -1,5 +1,9 @@
-fastrpc (1.0.2-1~bpo~qcom4) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
+  [ root ]
   * Unreleased changes
 
- -- root <root@90094cfc79b6>  Tue, 09 Jun 2026 13:23:26 +0000
+  [ GitHub Service Bot ]
+  * New upstream release
+
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Thu, 02 Jul 2026 18:04:39 +0000
