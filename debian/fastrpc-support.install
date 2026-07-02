@@ -1,5 +1,5 @@
 debian/adsprpcd.service usr/lib/systemd/system/
 debian/cdsprpcd.service usr/lib/systemd/system/
-usr/bin/adsprpcd usr/sbin
-usr/bin/cdsprpcd usr/sbin
-usr/bin/sdsprpcd usr/sbin
+usr/sbin/adsprpcd
+usr/sbin/cdsprpcd
+usr/sbin/sdsprpcd
