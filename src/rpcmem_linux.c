@@ -118,12 +118,6 @@ void rpcmem_deinit() {
   pthread_mutex_destroy(&rpcmt);
 }
 
-int rpcmem_set_dmabuf_name(const char *name, int fd, int heapid,
-			void *buf, uint32_t rpcflags) {
-        // Dummy call where DMABUF is not used
-        return 0;
-}
-
 int rpcmem_to_fd_internal(void *po) {
   struct rpc_info *rinfo, *rfree = 0;
   QNode *pn, *pnn;
@@ -244,6 +238,10 @@ void rpcmem_free(void *po) { rpcmem_free_internal(po); }
 
 void *rpcmem_alloc(int heapid, uint32_t flags, int size) {
   return rpcmem_alloc_internal(heapid, flags, size);
+}
+
+void *rpcmem_alloc2(int heapid, uint32_t flags, size_t size) {
+  return rpcmem_alloc_internal(heapid, flags, (size_t)size);
 }
 
 void rpcmem_deinit_internal() { rpcmem_deinit(); }
