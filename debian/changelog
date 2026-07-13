@@ -1,8 +1,12 @@
-fastrpc (1.0.2-3~) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
+  [ Robie Basak ]
   * 
 
- -- Robie Basak <robie.basak@oss.qualcomm.com>  Wed, 18 Mar 2026 13:50:58 +0000
+  [ GitHub Service Bot ]
+  * New upstream release
+
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 13 Jul 2026 20:20:20 +0000
 
 fastrpc (1.0.2-2) unstable; urgency=medium
 
