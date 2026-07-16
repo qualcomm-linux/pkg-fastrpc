@@ -1,5 +1,6 @@
-fastrpc (1.0.2-1) UNRELEASED; urgency=medium
+fastrpc (1.0.2-1) resolute; urgency=medium
 
+  [ Robie Basak ]
   * New upstream release
   * d/p/dlopen-abi-version: drop (fixed upstream).
   * d/gbp.conf: set upstream tag pattern.
@@ -13,7 +14,7 @@ fastrpc (1.0.2-1) UNRELEASED; urgency=medium
       + d/guess-dsp.sh: remove
       + d/copyright: drop guess-dsp.sh licensing information
 
- -- Robie Basak <robie.basak@oss.qualcomm.com>  Thu, 15 Jan 2026 19:58:21 +0000
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Thu, 16 Jul 2026 05:39:19 +0000
 
 fastrpc (1.0.0-1) unstable; urgency=medium
 
