@@ -1,0 +1,28 @@
+name: PR Build Hook
+
+on:
+  pull_request:
+    branches: [ debian/*, qcom/**, qli/**, qli-staging/** ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  set-pending-status:
+    name: Set PR Build Pending
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark PR Build pending
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha,
+              state: 'pending',
+              context: 'PR Build',
+              description: 'Running unified Debian/Ubuntu PR build...'
+            });
