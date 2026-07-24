@@ -1,5 +1,13 @@
-debian/adsprpcd.service usr/lib/systemd/system/
-debian/cdsprpcd.service usr/lib/systemd/system/
 usr/sbin/adsprpcd
 usr/sbin/cdsprpcd
 usr/sbin/sdsprpcd
+usr/sbin/gdsprpcd
+usr/lib/systemd/system/adsprpcd.service
+usr/lib/systemd/system/adsprpcd_audiopd.service
+usr/lib/systemd/system/cdsp1rpcd.service
+usr/lib/systemd/system/cdsprpcd.service
+usr/lib/systemd/system/gdsp0rpcd.service
+usr/lib/systemd/system/gdsp1rpcd.service
+usr/lib/systemd/system/sdsprpcd.service
+usr/lib/udev/rules.d/60-fastrpc.rules
+usr/lib/sysusers.d/fastrpc.conf

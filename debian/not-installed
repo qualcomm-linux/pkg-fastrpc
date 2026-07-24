@@ -1,21 +1,9 @@
-usr/sbin/gdsprpcd
 usr/lib/${DEB_HOST_MULTIARCH}/libadsp_default_listener.la
 usr/lib/${DEB_HOST_MULTIARCH}/libadsprpc.la
 usr/lib/${DEB_HOST_MULTIARCH}/libcdsp_default_listener.la
 usr/lib/${DEB_HOST_MULTIARCH}/libcdsprpc.la
 usr/lib/${DEB_HOST_MULTIARCH}/libsdsp_default_listener.la
 usr/lib/${DEB_HOST_MULTIARCH}/libsdsprpc.la
-
-# Keep Debian-maintained integration files for now.
-lib/systemd/system/adsprpcd.service
-lib/systemd/system/adsprpcd_audiopd.service
-lib/systemd/system/cdsp1rpcd.service
-lib/systemd/system/cdsprpcd.service
-lib/systemd/system/gdsp0rpcd.service
-lib/systemd/system/gdsp1rpcd.service
-lib/systemd/system/sdsprpcd.service
-lib/udev/rules.d/60-fastrpc.rules
-usr/lib/sysusers.d/fastrpc.conf
 
 # fastrpc_test components cannot currently ship in Debian; see README.source
 usr/bin/fastrpc_test
