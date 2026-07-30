@@ -17,6 +17,7 @@
 #include "remote64.h"
 #include "rpcmem_internal.h"
 #include "verify.h"
+#include <inttypes.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,12 +25,6 @@
 #include <sys/mman.h>
 #include "fastrpc_hash_table.h"
 
-#define ADSP_MMAP_HEAP_ADDR 4
-#define ADSP_MMAP_REMOTE_HEAP_ADDR 8
-#define ADSP_MMAP_ADD_PAGES 0x1000
-#define ADSP_MMAP_ADD_PAGES_LLC 0x3000
-#define FASTRPC_ALLOC_HLOS_FD                                                  \
-  0x10000 /* Flag to allocate HLOS FD to be shared with DSP */
 
 typedef struct {
 	QList mem_list;
@@ -128,8 +123,8 @@ __QAIC_IMPL(apps_mem_request_map64)(int heapid, uint32_t lflags, uint32_t rflags
   VERIFYC(me, AEE_ERESOURCENOTFOUND);
   VERIFY(AEE_SUCCESS ==
          (nErr = get_unsigned_pd_attribute(domain, &unsigned_module)));
-  FASTRPC_ATRACE_BEGIN_L("%s called with rflag 0x%x, lflags 0x%x, len 0x%llx, "
-                         "heapid %d and unsigned PD %d",
+  FASTRPC_ATRACE_BEGIN_L("%s called with rflag 0x%x, lflags 0x%x, "
+                         "len 0x%" PRIx64 ", heapid %d and unsigned PD %d",
                          __func__, rflags, lflags, len, heapid,
                          unsigned_module);
   if (unsigned_module) {
@@ -149,7 +144,6 @@ __QAIC_IMPL(apps_mem_request_map64)(int heapid, uint32_t lflags, uint32_t rflags
     VERIFYC(NULL != (buf = rpcmem_alloc_internal(heapid, lflags, len)),
             AEE_ENORPCMEMORY);
     VERIFYC(0 < (fd = rpcmem_to_fd_internal(buf)), AEE_EBADFD);
-    rpcmem_set_dmabuf_name("dsp", fd, heapid, buf, lflags);
     /* Using FASTRPC_MAP_FD_DELAYED as only HLOS mapping is reqd at this point
      */
     VERIFY(AEE_SUCCESS == (nErr = fastrpc_mmap(domain, fd, buf, 0, len,
@@ -177,10 +171,9 @@ __QAIC_IMPL(apps_mem_request_map64)(int heapid, uint32_t lflags, uint32_t rflags
               AEE_ENORPCMEMORY);
       fd = rpcmem_to_fd_internal(buf);
       VERIFYC(fd > 0, AEE_EBADPARM);
-      rpcmem_set_dmabuf_name("dsp", fd, heapid, buf, lflags);
     }
     VERIFY(AEE_SUCCESS ==
-           (nErr = remote_mmap64_internal(fd, rflags, (uint64_t)buf, len,
+            (nErr = remote_mmap64_internal(fd, rflags, (uint64_t)buf, len,
                                           (uint64_t *)vadsp)));
     pbuf = (uint64_t)buf;
     *vapps = pbuf;
@@ -204,7 +197,7 @@ bail:
       minfo = NULL;
     }
     VERIFY_EPRINTF("Error 0x%x: apps_mem_request_mmap64 failed for fd 0x%x of "
-                   "size %lld (lflags 0x%x, rflags 0x%x)\n",
+                   "size %" PRId64 " (lflags 0x%x, rflags 0x%x)\n",
                    nErr, fd, len, lflags, rflags);
   }
   FASTRPC_ATRACE_END();
@@ -236,8 +229,8 @@ __QAIC_IMPL(apps_mem_request_unmap64)(uint64_t vadsp,
   int domain = get_current_domain();
   apps_mem_info *me = NULL;
 
-  FASTRPC_ATRACE_BEGIN_L("%s called with vadsp 0x%llx, len 0x%llx", __func__,
-                         vadsp, len);
+  FASTRPC_ATRACE_BEGIN_L("%s called with vadsp 0x%" PRIx64 ", len 0x%" PRIx64,
+                         __func__, vadsp, len);
   GET_HASH_NODE(apps_mem_info, domain, me);
   VERIFYC(me, AEE_ERESOURCENOTFOUND);
 
@@ -283,8 +276,8 @@ __QAIC_IMPL(apps_mem_request_unmap64)(uint64_t vadsp,
   mfree = NULL;
 bail:
   if (nErr != AEE_SUCCESS) {
-    VERIFY_EPRINTF("Error 0x%x: apps_mem_request_unmap64 failed for size %lld "
-                   "(vadsp 0x%llx)\n",
+    VERIFY_EPRINTF("Error 0x%x: apps_mem_request_unmap64 failed for size "
+                   "%" PRId64 " (vadsp 0x%" PRIx64 ")\n",
                    nErr, len, vadsp);
   }
   FASTRPC_ATRACE_END();
@@ -353,7 +346,7 @@ __QAIC_IMPL_EXPORT int __QAIC_IMPL(apps_mem_share_unmap)(uint64_t vadsp, int siz
   nErr = apps_mem_request_unmap64(vadsp, len1);
   if (nErr != AEE_SUCCESS) {
     VERIFY_EPRINTF(
-        "Error 0x%x: apps_mem_share_unmap failed size %d (vadsp 0x%llx)\n",
+        "Error 0x%x: apps_mem_share_unmap failed size %d (vadsp 0x%" PRIx64 ")\n",
         nErr, size, vadsp);
   }
   return nErr;
