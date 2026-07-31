@@ -1,4 +1,4 @@
-fastrpc (1.0.6-1) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1) unstable; urgency=medium
 
   * New upstream release.
     [ Ekansh Gupta ]
@@ -27,7 +27,7 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
   * control: wrap build-deps.
   * Add myself to Uploaders.
 
- -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 13 Jul 2026 20:29:33 +0000
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Fri, 31 Jul 2026 17:11:19 +0200
 
 fastrpc (1.0.2-2) unstable; urgency=medium
 
