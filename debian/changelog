@@ -1,20 +1,17 @@
 fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
-  [ Ekansh Gupta ]
-  * Use upstream systemd service units and configuration files.
-    - Remove Debian-maintained adsprpcd.service and cdsprpcd.service.
-    - Install upstream service units, udev rules, and sysusers
-      configuration files.
-    - Drop Debian-maintained fastrpc-support.postinst; user and group
-      creation is now handled by the upstream sysusers.d configuration.
-    - Drop Debian-maintained fastrpc-support.udev; device node
-      permissions are now provided by the upstream udev rules.
-
-  [ Simon Beaudoin   ]
-  * d/control: Add libbsd-dev dependency
-
-  [ GitHub Service Bot ]
-  * New upstream release
+  * New upstream release.
+    [ Ekansh Gupta ]
+    - Use upstream systemd service units and configuration files.
+      - Remove Debian-maintained adsprpcd.service and cdsprpcd.service.
+      - Install upstream service units, udev rules, and sysusers
+        configuration files.
+      - Drop Debian-maintained fastrpc-support.postinst; user and group
+        creation is now handled by the upstream sysusers.d configuration.
+      - Drop Debian-maintained fastrpc-support.udev; device node
+        permissions are now provided by the upstream udev rules.
+    [ Simon Beaudoin ]
+    - d/control: Add libbsd-dev dependency
 
  -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 13 Jul 2026 20:29:33 +0000
 
