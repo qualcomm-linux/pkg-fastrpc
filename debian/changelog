@@ -1,3 +1,9 @@
+fastrpc (1.0.6-1qli1~bpo13+1) UNRELEASED; urgency=medium
+
+  * Rebuild for trixie-backports.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Fri, 31 Jul 2026 17:42:14 +0200
+
 fastrpc (1.0.6-1qli1) forky; urgency=medium
 
   [ Loïc Minier ]
