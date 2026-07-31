@@ -5,7 +5,10 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
     - Use upstream systemd service units and configuration files.
       - Remove Debian-maintained adsprpcd.service and cdsprpcd.service.
       - Install upstream service units, udev rules, and sysusers
-        configuration files.
+        configuration files; this notably adds the following new
+        services: adsprpcd_audiopd, cdsp1rpcd, gdsp0rpcd, gdsp1rpcd,
+        sdsprpcd, but note that these are only started if the
+        corresponding device nodes are present.
       - Drop Debian-maintained fastrpc-support.postinst; user and group
         creation is now handled by the upstream sysusers.d configuration.
       - Drop Debian-maintained fastrpc-support.udev; device node
