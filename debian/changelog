@@ -1,8 +1,9 @@
-fastrpc (1.0.6-1qli1~bpo13+1) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1qli1~bpo13+1) trixie; urgency=medium
 
+  [ Loïc Minier ]
   * Rebuild for trixie-backports.
 
- -- Loïc Minier <loic.minier@oss.qualcomm.com>  Fri, 31 Jul 2026 17:42:14 +0200
+ -- Debusine Action GitHub Bot <noreply@bot.invalid>  Fri, 31 Jul 2026 15:44:29 +0000
 
 fastrpc (1.0.6-1qli1) forky; urgency=medium
 
