@@ -18,7 +18,6 @@
 // Environment variable name, that can be used to override the search paths
 #define ADSP_LIBRARY_PATH "ADSP_LIBRARY_PATH"
 #define DSP_LIBRARY_PATH "DSP_LIBRARY_PATH"
-#define ADSP_AVS_PATH "ADSP_AVS_CFG_PATH"
 #define MAX_NON_PRELOAD_LIBS_LEN 2048
 #define FILE_EXT ".so"
 
@@ -27,11 +26,6 @@
 #endif
 #ifndef VENDOR_DOM_LOCATION
 #define VENDOR_DOM_LOCATION "/vendor/dsp/xdsp/"
-#endif
-
-// Search path used by fastRPC for acdb path
-#ifndef ADSP_AVS_CFG_PATH
-#define ADSP_AVS_CFG_PATH ";/etc/acdbdata/;"
 #endif
 
 int fopen_from_dirlist(const char *dirList, const char *delim, 

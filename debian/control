@@ -3,7 +3,7 @@ Maintainer: Robie Basak <robie.basak@oss.qualcomm.com>
 Standards-Version: 4.6.2
 Section: misc
 Priority: optional
-Build-Depends: debhelper-compat (= 13), libyaml-dev, pkgconf
+Build-Depends: debhelper-compat (= 13), libyaml-dev, libbsd-dev, pkgconf
 Homepage: https://github.com/qualcomm/fastrpc
 Vcs-Git: https://github.com/qualcomm-linux/pkg-fastrpc -b debian/latest
 Vcs-Browser: https://github.com/qualcomm-linux/pkg-fastrpc
@@ -39,3 +39,12 @@ Description: Qualcomm FastRPC - support daemons and udev rules
  This package provides the necessary support daemons used to supply object code
  to the DSPs and the udev rules to make the DSPs available to users.
 Depends: adduser, hexagon-dsp-binaries, ${misc:Depends}, ${shlibs:Depends}
+
+Package: fastrpc-tests
+Architecture: arm64
+Description: Qualcomm FastRPC - test programs
+ FastRPC is the Qualcomm-proprietary RPC mechanism used to enable remote
+ function calls between the CPU and aDSP. Development package.
+ .
+ This package provides the FastRPC test suite.
+Depends: ${misc:Depends}, ${shlibs:Depends}, fastrpc-support
