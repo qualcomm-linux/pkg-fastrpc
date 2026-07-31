@@ -12,6 +12,10 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
         permissions are now provided by the upstream udev rules.
     [ Simon Beaudoin ]
     - d/control: Add libbsd-dev dependency
+    [ Loïc Minier ]
+    - d/control: Add systemd-dev build-dep to allow upstream configure
+      to detect the target udev and systemd directories to install
+      systemd unit files and udev rules to.
 
  -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 13 Jul 2026 20:29:33 +0000
 
