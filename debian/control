@@ -2,7 +2,12 @@ Source: fastrpc
 Maintainer: Robie Basak <robie.basak@oss.qualcomm.com>
 Standards-Version: 4.6.2
 Section: contrib/misc
-Build-Depends: debhelper-compat (= 13), libbsd-dev, libyaml-dev, pkgconf, systemd-dev
+Build-Depends:
+ debhelper-compat (= 13),
+ libbsd-dev,
+ libyaml-dev,
+ pkgconf,
+ systemd-dev,
 Homepage: https://github.com/qualcomm/fastrpc
 Vcs-Git: https://github.com/qualcomm-linux/pkg-fastrpc -b debian/latest
 Vcs-Browser: https://github.com/qualcomm-linux/pkg-fastrpc
