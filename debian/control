@@ -1,5 +1,6 @@
 Source: fastrpc
 Maintainer: Robie Basak <robie.basak@oss.qualcomm.com>
+Uploaders: Loïc Minier <loic.minier@oss.qualcomm.com>
 Standards-Version: 4.6.2
 Section: contrib/misc
 Build-Depends:

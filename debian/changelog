@@ -19,6 +19,7 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
   [ Loïc Minier ]
   * control: wrap build-deps.
+  * Add myself to Uploaders.
 
  -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Mon, 13 Jul 2026 20:29:33 +0000
 
