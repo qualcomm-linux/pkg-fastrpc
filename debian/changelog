@@ -17,6 +17,9 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
       to detect the target udev and systemd directories to install
       systemd unit files and udev rules to.
 
+  [ Ekansh Gupta ]
+  * Install gdsprpcd service, like the other DSP services.
+
   [ Loïc Minier ]
   * control: wrap build-deps.
   * Add myself to Uploaders.
