@@ -1,5 +1,6 @@
-fastrpc (1.0.6-1) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1) resolute; urgency=medium
 
+  [ Ekansh Gupta ]
   * New upstream release.
   * Sync packaging updates from Debian:
     - Adopt upstream systemd, udev and sysusers
@@ -11,7 +12,7 @@ fastrpc (1.0.6-1) UNRELEASED; urgency=medium
     - Incorporate Debian packaging maintenance updates.
 	- Enable fastrpc-tests package.
 
- -- Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>  Thu, 04 Aug 2026 11:19:20 +0530
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Tue, 04 Aug 2026 06:36:11 +0000
 
 fastrpc (1.0.2-1) resolute; urgency=medium
 
