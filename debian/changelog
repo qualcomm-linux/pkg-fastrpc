@@ -1,8 +1,17 @@
-fastrpc (1.0.2-2~) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1) UNRELEASED; urgency=medium
 
-  * WIP — update changelog before next release
+  * New upstream release.
+  * Sync packaging updates from Debian:
+    - Adopt upstream systemd, udev and sysusers
+      configuration.
+    - Add missing DSP daemon service units.
+    - Update package dependencies and build dependencies.
+    - Change hexagon-dsp-binaries dependency from Depends
+      to Recommends.
+    - Incorporate Debian packaging maintenance updates.
+	- Enable fastrpc-tests package.
 
- -- Robie Basak <robie.basak@oss.qualcomm.com>  Thu, 16 Jul 2026 05:49:20 +0000
+ -- Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>  Thu, 04 Aug 2026 11:19:20 +0530
 
 fastrpc (1.0.2-1) resolute; urgency=medium
 

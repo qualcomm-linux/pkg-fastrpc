@@ -1,6 +1,3 @@
-Library packages
-================
-
 The upstream fastrpc library comprises six shared libraries and one set
 of include files. The shared libraries are in pairs, supporting three
 classes of DSP. The shared libraries for each class support a common ABI
@@ -24,28 +21,3 @@ safe, as permitted under Debian policy section 8.1.
 
 libfastrpc1 ships all six shared libraries, and libfastrpc-dev ships the
 six .so symlinks and the single set of headers.
-
-Test suite binaries
-===================
-
-Currently upstream is unable to ship the sources for the test suite that is
-included in the upstream release for technical toolchain reasons, contrary to
-DFSG. Upstream aim to address this and this is tracked upstream at
-https://github.com/qualcomm/fastrpc/issues/235.
-
-However, they remain licensed under BSD-3-Clause, so are redistributable
-by Debian. For this reason, I didn't bother with a repack to exclude the
-files, instead just ensuring that these do not end up in any binary
-builds. The upstream build system simply installs these directly with
-`make install`, so it is trivial to put these files into
-debian/not-installed with a high degree of confidence that they will not
-slip through.
-
-lintian source-contains-prebuilt-binary tags are overriden accordingly,
-but only for the current set of named files so as not to miss anything
-else that might have a different reason for being present.
-
-Since the build system selects 'linux' and not 'android', binaries
-shipped in test/android/ do not get installed by `make install` and
-therefore do not appear in debian/not-installed even though they are
-overridden in lintian.
