@@ -19,9 +19,9 @@ permissions:
 
 jobs:
   Release:
-    uses: qualcomm-linux/qcom-build-utils/.github/workflows/pkg-release-reusable-workflow.yml@dev/pilot-axiom-gate
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/pkg-release-reusable-workflow.yml@main
     with:
-      qcom-build-utils-ref: dev/pilot-axiom-gate
+      qcom-build-utils-ref: main
       debian-branch: ${{ github.event.inputs.debian-branch }}
       test-run: ${{ vars.IS_TEST_PKG == '1' || vars.IS_TEST_PKG == 'true' || vars['is-test-pkg'] == '1' || vars['is-test-pkg'] == 'true' }}
       debusine-parent-workspace: ${{ vars.DEBUSINE_PARENT_WORKSPACE }}
