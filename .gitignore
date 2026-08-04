@@ -24,6 +24,7 @@ libtool
 stamp-h1
 
 .deps/
+.dirstamp
 .libs/
 
 # Compiled objects
@@ -31,10 +32,14 @@ stamp-h1
 *.lo
 *.la
 
+# Generated service units
+files/*.service
+
 # Compiled programs
 src/adsprpcd
 src/cdsprpcd
 src/sdsprpcd
+src/gdsprpcd
 test/fastrpc_test
 
 # make dist tarballs

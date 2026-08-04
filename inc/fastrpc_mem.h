@@ -73,4 +73,40 @@ int fastrpc_buffer_ref(int domain, int fd, int ref, void **va, size_t *size);
  */
 void remote_register_buf(void *buf, int size, int fd);
 
+/*
+ * Internal function to map a buffer and return the DSP virtual address.
+ * Creates a mapping on the DSP and stores the mapping information in the static map list.
+ *
+ * @param domain The DSP domain ID (-1 for current domain)
+ * @param fd File descriptor of the buffer
+ * @param vaddr Virtual address of the buffer on CPU side
+ * @param offset Offset from the beginning of the buffer (must be 0)
+ * @param length Size of buffer in bytes
+ * @param flags Mapping flags
+ * @param raddr Output: DSP virtual address of the mapped buffer
+ *
+ * @return 0 on success, error code on failure
+ */
+int fastrpc_mmap_internal(int domain, int fd, void *vaddr, int offset, size_t length, uint32_t flags, uint64_t *raddr);
+
+/*
+ * Internal function to unmap a buffer using the DSP virtual address.
+ * Looks up the mapping in the static map list using the DSP virtual address,
+ * then performs the unmap operation and removes the mapping from the list.
+ *
+ * @param domain The DSP domain ID (-1 for current domain)
+ * @param raddr DSP virtual address of the mapped buffer
+ * @param length Size of buffer in bytes to unmap
+ *
+ * @return 0 on success, error code on failure
+ */
+int fastrpc_munmap_internal(int domain, uint64_t raddr, size_t length);
+
+#define ADSP_MMAP_HEAP_ADDR 4
+#define ADSP_MMAP_REMOTE_HEAP_ADDR 8
+#define ADSP_MMAP_ADD_PAGES 0x1000
+#define ADSP_MMAP_ADD_PAGES_LLC 0x3000
+#define FASTRPC_ALLOC_HLOS_FD                                                  \
+  0x10000 /* Flag to allocate HLOS FD to be shared with DSP */
+
 #endif //FASTRPC_MEM_H

@@ -154,8 +154,8 @@ int apps_std_get_dirinfo(const apps_std_DIR *dir,
   } else {
     nErr = ESTALE;
     VERIFY_EPRINTF(
-        "Error 0x%x: %s: stale directory handle 0x%llx passed by DSP\n", nErr,
-        __func__, dir->handle);
+        "Error 0x%x: %s: stale directory handle 0x%" PRIx64 " passed by DSP\n",
+        nErr, __func__, dir->handle);
     goto bail;
   }
 bail:
@@ -970,20 +970,6 @@ static int get_dirlist_from_env(const char *envvarname, char **ppDirList) {
       // Append default DSP_SEARCH_PATH to user defined env
       strlcat(envList, dsp_search_path, envListPrependLen);
       envListLen = envListPrependLen;
-    } else if (strncmp(envvarname, ADSP_AVS_PATH,
-                           strlen(ADSP_AVS_PATH)) == 0) {
-      envListPrependLen = envListLen + strlen(ADSP_AVS_CFG_PATH);
-      if (envLenGuess < envListPrependLen) {
-        FREEIF(envListBuf);
-        VERIFYC(envListBuf =
-                    realloc(envListBuf, sizeof(char) * envListPrependLen),
-                AEE_ENOMEMORY);
-        envList = envListBuf;
-        VERIFY(0 == (nErr = apps_std_getenv(envvarname, envList,
-                                            envListPrependLen, &listLen)));
-      }
-      strlcat(envList, ADSP_AVS_CFG_PATH, envListPrependLen);
-      envListLen = envListPrependLen;
     }
   } else if (strncmp(envvarname, ADSP_LIBRARY_PATH,
                          strlen(ADSP_LIBRARY_PATH)) == 0 ||
@@ -991,10 +977,6 @@ static int get_dirlist_from_env(const char *envvarname, char **ppDirList) {
                          strlen(DSP_LIBRARY_PATH)) == 0) {
     envListLen = listLen =
         1 + strlcpy(envListBuf, dsp_search_path, envLenGuess);
-  } else if (strncmp(envvarname, ADSP_AVS_PATH,
-                         strlen(ADSP_AVS_PATH)) == 0) {
-    envListLen = listLen =
-        1 + strlcpy(envListBuf, ADSP_AVS_CFG_PATH, envLenGuess);
   }
 
   /*
@@ -1026,19 +1008,24 @@ int fopen_from_dirlist(const char *dirList, const char *delim,
     const char *mode, const char *name, apps_std_FILE *psout) {
   int nErr = AEE_SUCCESS;
   char *absName = NULL, *dirName = NULL, *pos = NULL;
+  char *dirListCopy = NULL, *dirListPtr = NULL;
   uint16_t absNameLen = 0;
   int domain = GET_DOMAIN_FROM_EFFEC_DOMAIN_ID(get_current_domain());
 
   VERIFYC(NULL != dirList, AEE_EBADPARM);
 
-  while (dirList) {
-    pos = strstr(dirList, delim);
-    dirName = dirList;
+  // Make a copy of dirList to avoid modifying caller's buffer
+  VERIFYC(NULL != (dirListCopy = strdup(dirList)), AEE_ENOMEMORY);
+  dirListPtr = dirListCopy;
+
+  while (dirListPtr) {
+    pos = strstr(dirListPtr, delim);
+    dirName = dirListPtr;
     if (pos) {
       *pos = '\0';
-      dirList = pos + strlen(delim);
+      dirListPtr = pos + strlen(delim);
     } else {
-      dirList = 0;
+      dirListPtr = 0;
     }
 
     // Append domain to path
@@ -1061,6 +1048,7 @@ int fopen_from_dirlist(const char *dirList, const char *delim,
       // Success
       FARF(ALWAYS, "Successfully opened file %s", absName);
       FREEIF(absName);
+      FREEIF(dirListCopy);
       return nErr;
     }
     FREEIF(absName);
@@ -1087,11 +1075,13 @@ int fopen_from_dirlist(const char *dirList, const char *delim,
                        strlen(TESTSIG_FILE_NAME)) != 0))
         FARF(ALWAYS, "Successfully opened file %s", name);
       FREEIF(absName);
+      FREEIF(dirListCopy);
       return nErr;
     }
   }
 bail:
   FREEIF(absName);
+  FREEIF(dirListCopy);
   return nErr;
 }
 

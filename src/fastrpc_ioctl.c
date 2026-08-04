@@ -5,53 +5,10 @@
 
 #include "AEEStdErr.h"
 #include "HAP_farf.h"
-#include "fastrpc_async.h"
 #include "fastrpc_internal.h"
 #include "fastrpc_notif.h"
 #include "remote.h"
 #include <sys/ioctl.h>
-
-/* check async support */
-int is_async_fastrpc_supported(void) {
-  /* async not supported by upstream driver */
-  return 0;
-}
-
-/* Returns the name of the domain based on the following
- ADSP/SLPI/MDSP/CDSP - Return Secure node
- */
-const char *get_secure_domain_name(int domain_id) {
-  const char *name;
-  int domain = GET_DOMAIN_FROM_EFFEC_DOMAIN_ID(domain_id);
-
-  switch (domain) {
-  case ADSP_DOMAIN_ID:
-    name = ADSPRPC_SECURE_DEVICE;
-    break;
-  case SDSP_DOMAIN_ID:
-    name = SDSPRPC_SECURE_DEVICE;
-    break;
-  case MDSP_DOMAIN_ID:
-    name = MDSPRPC_SECURE_DEVICE;
-    break;
-  case CDSP_DOMAIN_ID:
-    name = CDSPRPC_SECURE_DEVICE;
-    break;
-  case CDSP1_DOMAIN_ID:
-    name = CDSP1RPC_SECURE_DEVICE;
-    break;
-  case GDSP0_DOMAIN_ID:
-    name = GDSP0RPC_SECURE_DEVICE;
-    break;
-  case GDSP1_DOMAIN_ID:
-    name = GDSP1RPC_SECURE_DEVICE;
-    break;
-  default:
-    name = DEFAULT_DEVICE;
-    break;
-  }
-  return name;
-}
 
 int ioctl_init(int dev, uint32_t flags, int attr, unsigned char *shell, int shelllen,
                int shellfd, char *mem, int memlen, int memfd, int tessiglen) {
@@ -91,7 +48,7 @@ int ioctl_init(int dev, uint32_t flags, int attr, unsigned char *shell, int shel
 }
 
 int ioctl_invoke(int dev, int req, remote_handle handle, uint32_t sc, void *pra,
-                 int *fds, unsigned int *attrs, void *job, unsigned int *crc,
+                 int *fds, unsigned int *attrs, unsigned int *crc,
                  uint64_t *perf_kernel, uint64_t *perf_dsp) {
   int ioErr = AEE_SUCCESS;
   struct fastrpc_ioctl_invoke invoke = {0};
@@ -105,12 +62,6 @@ int ioctl_invoke(int dev, int req, remote_handle handle, uint32_t sc, void *pra,
     return AEE_EUNSUPPORTED;
 
   return ioErr;
-}
-
-int ioctl_invoke2_response(int dev, fastrpc_async_jobid *jobid,
-                           remote_handle *handle, uint32_t *sc, int *result,
-                           uint64_t *perf_kernel, uint64_t *perf_dsp) {
-  return AEE_EUNSUPPORTED;
 }
 
 int ioctl_invoke2_notif(int dev, int *domain, int *session, int *status) {
@@ -256,4 +207,13 @@ int ioctl_mdctx_manage(int dev, int req, void *user_ctx,
 {
 	// TODO: Implement this for opensource
 	return AEE_EUNSUPPORTED;
+}
+
+int fastrpc_async_get_status(fastrpc_async_jobid jobid, int timeout_us,
+                             int *result) {
+  return AEE_EUNSUPPORTED;
+}
+
+int fastrpc_release_async_job(fastrpc_async_jobid jobid) {
+  return AEE_EUNSUPPORTED;
 }
