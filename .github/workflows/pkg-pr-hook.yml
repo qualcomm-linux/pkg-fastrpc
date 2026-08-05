@@ -2,7 +2,7 @@ name: PR Build
 
 on:
   pull_request:
-    branches: [ debian/*, qcom/** ]
+    branches: [ debian/*, qcom/**, dev-axiom/ubuntu/resolute ]
     types: [ opened, synchronize, reopened, closed ]
 
 permissions:
