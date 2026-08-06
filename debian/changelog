@@ -1,3 +1,10 @@
+fastrpc (1.0.6-1~bpo13+1) trixie-backports; urgency=medium
+
+  * Rebuild for trixie-backports.
+    - Adjust gbp.conf.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Thu, 06 Aug 2026 20:11:42 +0200
+
 fastrpc (1.0.6-1) unstable; urgency=medium
 
   * New upstream release.
