@@ -1,8 +1,27 @@
 fastrpc (1.0.6-1qli1~bpo13+2~) UNRELEASED; urgency=medium
 
-  * Unreleased changes
+  * Backport 1.0.6-2qli1.
 
- -- Debusine Action GitHub Bot <noreply@bot.invalid>  Fri, 31 Jul 2026 15:47:28 +0000
+ -- Debusine GitHub Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 21:17:57 +0200
+
+
+fastrpc (1.0.6-2qli1) forky; urgency=medium
+
+  [ Debusine GitHub Bot ]
+  * Merge 1.0.6-2.
+
+ -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:10:11 +0000
+
+fastrpc (1.0.6-2) unstable; urgency=medium
+
+  * Add patch dsprpcd-fix-restart-behavior; more resilient behavior in the
+    face of daemon crashes, such as the ones currently experienced on Agatti
+    platforms (e.g. RB1 or UNOQ). From upstream GH #370.
+  * Add patch udev-start-offline-dsp-remoteprocs; start remoteprocs notably
+    after initramfs when some have been left offline due to missing firmware
+    during early probing. From upstream GH #372.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Thu, 13 Aug 2026 20:46:08 +0200
 
 fastrpc (1.0.6-1qli1~bpo13+1) trixie; urgency=medium
 
