@@ -1,3 +1,11 @@
+fastrpc (1.0.6-2) UNRELEASED; urgency=medium
+
+  * Add patch dsprpcd-fix-restart-behavior; more resilient behavior in the
+    face of daemon crashes, such as the ones currently experienced on Agatti
+    platforms (e.g. RB1 or UNOQ). From upstream GH #370.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Thu, 13 Aug 2026 20:33:32 +0200
+
 fastrpc (1.0.6-1) unstable; urgency=medium
 
   * New upstream release.
