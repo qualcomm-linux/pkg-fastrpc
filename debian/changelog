@@ -1,8 +1,9 @@
-fastrpc (1.0.6-2qli1~) UNRELEASED; urgency=medium
+fastrpc (1.0.6-2qli1) forky; urgency=medium
 
+  [ Debusine GitHub Bot ]
   * Merge 1.0.6-2.
 
- -- Debusine GitHub Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 21:05:21 +0200
+ -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:10:11 +0000
 
 fastrpc (1.0.6-2) unstable; urgency=medium
 
