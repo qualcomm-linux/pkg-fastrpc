@@ -1,9 +1,9 @@
-fastrpc (1.0.6-1qli1~bpo13+2~) UNRELEASED; urgency=medium
+fastrpc (1.0.6-1qli1~bpo13+2) trixie; urgency=medium
 
+  [ Debusine GitHub Bot ]
   * Backport 1.0.6-2qli1.
 
- -- Debusine GitHub Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 21:17:57 +0200
-
+ -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:19:48 +0000
 
 fastrpc (1.0.6-2qli1) forky; urgency=medium
 
