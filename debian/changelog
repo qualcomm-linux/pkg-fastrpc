@@ -1,3 +1,9 @@
+fastrpc (1.0.7-1~) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Fri, 21 Aug 2026 09:52:37 +0000
+
 fastrpc (1.0.6-2) unstable; urgency=medium
 
   * Add patch dsprpcd-fix-restart-behavior; more resilient behavior in the
