@@ -1,3 +1,4 @@
+usr/bin/dsp_check usr/libexec/${DEB_HOST_MULTIARCH}/fastrpc
 usr/sbin/adsprpcd
 usr/sbin/cdsprpcd
 usr/sbin/sdsprpcd
