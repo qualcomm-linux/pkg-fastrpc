@@ -2,5 +2,4 @@
 fastrpc-tests binary: arch-dependent-file-in-usr-share [usr/share/fastrpc_test/*]
 fastrpc-tests binary: binary-from-other-architecture [usr/share/fastrpc_test/*]
 fastrpc-tests binary: hardening-no-relro [usr/share/fastrpc_test/*]
-fastrpc-tests binary: library-not-linked-against-libc [usr/share/fastrpc_test/*]
 fastrpc-tests binary: shared-library-lacks-stack-section [usr/share/fastrpc_test/*]
