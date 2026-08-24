@@ -16,7 +16,7 @@ fastrpc (1.0.6-1) resolute; urgency=medium
     - Change hexagon-dsp-binaries dependency from Depends
       to Recommends.
     - Incorporate Debian packaging maintenance updates.
-	- Enable fastrpc-tests package.
+    - Enable fastrpc-tests package.
 
  -- GitHub Service Bot <githubservice@qti.qualcomm.com>  Tue, 04 Aug 2026 06:36:11 +0000
 
