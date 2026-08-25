@@ -10,7 +10,7 @@ on:
         description: The debian ref to build. For example branch "qcom/ubuntu/resolute"
         type: string
         required: true
-        default: qcom/ubuntu/resolute
+        default: dev-axiom/ubuntu/resolute
 
       force-docker-build:
         description: Force local pkg-builder instead of Debusine for Debian-family suites
@@ -24,9 +24,9 @@ permissions:
 jobs:
   build:
     name: Build
-    uses: qualcomm-linux/qcom-build-utils/.github/workflows/pkg-build-reusable-workflow.yml@dev/pilot-axiom-gate
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/pkg-build-reusable-workflow.yml@feat/upload-s3-metadata-json
     with:
-      qcom-build-utils-ref: dev/pilot-axiom-gate
+      qcom-build-utils-ref: feat/upload-s3-metadata-json
       debian-ref: ${{ inputs.debian-ref }}
       force-docker-build: ${{ inputs.force-docker-build }}
       debusine-parent-workspace: ${{ vars.DEBUSINE_PARENT_WORKSPACE }}
