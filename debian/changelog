@@ -1,3 +1,20 @@
+fastrpc (1.0.6-2~bpo13+1) trixie-backports; urgency=medium
+
+  * Rebuild for trixie-backports.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Wed, 26 Aug 2026 22:26:58 +0200
+
+fastrpc (1.0.6-2) unstable; urgency=medium
+
+  * Add patch dsprpcd-fix-restart-behavior; more resilient behavior in the
+    face of daemon crashes, such as the ones currently experienced on Agatti
+    platforms (e.g. RB1 or UNOQ). From upstream GH #370.
+  * Add patch udev-start-offline-dsp-remoteprocs; start remoteprocs notably
+    after initramfs when some have been left offline due to missing firmware
+    during early probing. From upstream GH #372.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Thu, 13 Aug 2026 20:46:08 +0200
+
 fastrpc (1.0.6-1~bpo13+1) trixie-backports; urgency=medium
 
   * Rebuild for trixie-backports.
