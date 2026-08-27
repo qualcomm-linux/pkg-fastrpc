@@ -2,7 +2,7 @@ name: PR Build
 
 on:
   pull_request:
-    branches: [ debian/*, qcom/** ]
+    branches: [ debian/*, qcom/**, dev-axiom/ubuntu/resolute ]
     types: [ opened, synchronize, reopened, closed ]
 
 permissions:
@@ -13,9 +13,9 @@ jobs:
   build:
     name: PR Build
     if: ${{ github.event.action != 'closed' || github.event.pull_request.merged == true }}
-    uses: qualcomm-linux/qcom-build-utils/.github/workflows/pkg-build-reusable-workflow.yml@main
+    uses: qualcomm-linux/qcom-build-utils/.github/workflows/pkg-build-reusable-workflow.yml@feat/pr-check-s3-upload
     with:
-      qcom-build-utils-ref: main
+      qcom-build-utils-ref: feat/pr-check-s3-upload
       # PRE-MERGE: use the PR head branch (github.head_ref)
       # POST-MERGE: use the base branch name from the PR
       debian-ref: ${{ (github.event.action == 'closed' && github.event.pull_request.merged) && github.event.pull_request.base.ref || github.head_ref }}
