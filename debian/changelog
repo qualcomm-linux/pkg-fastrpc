@@ -1,10 +1,10 @@
-fastrpc (1.0.7-1qli1~) UNRELEASED; urgency=medium
+fastrpc (1.0.7-1qli1) forky; urgency=medium
 
   [ Robie Basak ]
   * Merge changes from 1.0.7-1. Remaining changes:
     - Cherry-pick 8dc6e21 to re-add fastrpc-tests package.
 
- -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:15:55 +0000
+ -- Debusine Action Bot <noreply@bot.invalid>  Thu, 27 Aug 2026 09:26:52 +0000
 
 fastrpc (1.0.7-1) unstable; urgency=medium
 
