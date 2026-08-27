@@ -1,8 +1,22 @@
-fastrpc (1.0.6-2qli2~) UNRELEASED; urgency=medium
+fastrpc (1.0.7-1qli1~) UNRELEASED; urgency=medium
 
-  * Unreleased changes
+  [ Robie Basak ]
+  * Merge changes from 1.0.7-1. Remaining changes:
+    - Cherry-pick 8dc6e21 to re-add fastrpc-tests package.
 
  -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:15:55 +0000
+
+fastrpc (1.0.7-1) unstable; urgency=medium
+
+  * New upstream release
+  * d/p/dsprpcd-fix-restart-behavior: drop, upstreamed
+  * d/*.install: install new manpages
+  * d/fastrpc-support.install: install dsp_check
+    - Uses /usr/libexec/${DEB_HOST_MULTIARCH}/fastrpc/ for now instead of
+      /usr/bin/ pending https://github.com/qualcomm/fastrpc/issues/381
+  * d/control: fastrpc-support Depends on libfastrpc1
+
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Mon, 24 Aug 2026 12:13:06 +0100
 
 fastrpc (1.0.6-2qli1) forky; urgency=medium
 

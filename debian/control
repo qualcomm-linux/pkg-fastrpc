@@ -43,7 +43,7 @@ Description: Qualcomm FastRPC - support daemons and udev rules
  .
  This package provides the necessary support daemons used to supply object code
  to the DSPs and the udev rules to make the DSPs available to users.
-Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
+Depends: adduser, libfastrpc1 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
 Recommends: hexagon-dsp-binaries
 
 Package: fastrpc-tests
