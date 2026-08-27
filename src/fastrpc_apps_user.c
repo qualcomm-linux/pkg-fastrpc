@@ -77,8 +77,10 @@
 
 #define VENDOR_DSP_LOCATION "/vendor/dsp/"
 #define VENDOR_DOM_LOCATION "/vendor/dsp/xdsp/"
+#define HEXAGON_LIBS_PATH_PREFIX CONFIG_BASE_DIR "hexagon"
 
 char DSP_LIBS_LOCATION[PATH_MAX] = DEFAULT_DSP_SEARCH_PATHS;
+static char DSP_SEARCH_PATHS_CACHE[NUM_DOMAINS][PATH_MAX] = {{0}};
 
 #ifdef LE_ENABLE
 #define PROPERTY_VALUE_MAX                                                     \
@@ -326,6 +328,92 @@ extern void apps_mem_table_deinit(void);
 
 static uint32_t crc_table[256];
 static atomic_bool timer_expired = false;
+
+static void build_dsp_search_path_cache_for_domain(int domain) {
+  int nErr = AEE_SUCCESS;
+  fastrpc_capability cap = {0, ARCH_VER, 0};
+  char arch_str[64] = {0};
+  char arch_path[PATH_MAX] = {0};
+  char *domain_path_cache = NULL;
+  const char *yaml_arch = NULL;
+
+  if (!IS_VALID_DOMAIN_ID(domain)) {
+    FARF(ALWAYS, "Warning: %s: Invalid domain %d", __func__, domain);
+    return;
+  }
+
+  domain_path_cache = DSP_SEARCH_PATHS_CACHE[domain];
+
+  /*
+   * Resolve arch string: capability API is preferred; YAML is the fallback
+   * for legacy targets where the capability is not supported.
+   */
+  cap.domain = domain;
+  nErr = fastrpc_get_cap(cap.domain, cap.attribute_ID, &cap.capability);
+  if (nErr == AEE_SUCCESS && cap.capability != 0) {
+    snprintf(arch_str, sizeof(arch_str), "v%02x", cap.capability & 0xFF);
+    FARF(RUNTIME_RPC_HIGH, "%s: domain %d: resolved ARCH from capability 0x%x: %s",
+         __func__, domain, cap.capability, arch_str);
+  } else {
+    /* Legacy target: capability API not supported, use YAML ARCH config. */
+    FARF(ALWAYS,
+         "Warning 0x%x: %s: ARCH_VER capability not supported for domain %d, "
+         "trying YAML ARCH config",
+         nErr, __func__, domain);
+    yaml_arch = get_dsp_arch_from_yaml(domain);
+    if (!yaml_arch || yaml_arch[0] == '\0') {
+      FARF(ALWAYS,
+           "Warning: %s: No YAML ARCH config for domain %d, "
+           "using DSP_LIBS_LOCATION only",
+           __func__, domain);
+      strlcpy(domain_path_cache, DSP_LIBS_LOCATION, PATH_MAX);
+      return;
+    }
+    strlcpy(arch_str, yaml_arch, sizeof(arch_str));
+    FARF(RUNTIME_RPC_HIGH, "%s: domain %d: resolved ARCH from YAML config: %s",
+         __func__, domain, arch_str);
+  }
+
+  /*
+   * Build the arch-specific path and put it at the front of the search list,
+   * followed by DSP_LIBS_LOCATION (board/YAML paths + generic fallback).
+   * The user-set ADSP_LIBRARY_PATH env is prepended at open-time by
+   * apps_std_imp, so the effective resolution order is:
+   *   1. ADSP_LIBRARY_PATH (user/container, highest priority)
+   *   2. arch-specific path  (e.g. CONFIG_BASE_DIR/hexagon/v75)
+   *   3. DSP_LIBS_LOCATION   (board-specific path from YAML + generic fallback)
+   */
+  if (snprintf(arch_path, sizeof(arch_path), "%s/%s",
+               HEXAGON_LIBS_PATH_PREFIX, arch_str) >= (int)sizeof(arch_path)) {
+    FARF(ALWAYS,
+         "Warning: %s: ARCH path truncated for domain %d, "
+         "using DSP_LIBS_LOCATION only",
+         __func__, domain);
+    strlcpy(domain_path_cache, DSP_LIBS_LOCATION, PATH_MAX);
+    return;
+  }
+
+  strlcpy(domain_path_cache, arch_path, PATH_MAX);
+  strlcat(domain_path_cache, ";", PATH_MAX);
+  if (strlcat(domain_path_cache, DSP_LIBS_LOCATION, PATH_MAX) >= PATH_MAX) {
+    FARF(ALWAYS,
+         "Warning: %s: Failed to build search list for domain %d, "
+         "using DSP_LIBS_LOCATION only",
+         __func__, domain);
+    strlcpy(domain_path_cache, DSP_LIBS_LOCATION, PATH_MAX);
+    return;
+  }
+
+  FARF(RUNTIME_RPC_HIGH, "%s: domain %d: search path: %s", __func__, domain,
+       domain_path_cache);
+}
+
+static const char *get_dsp_search_path_for_domain(int domain) {
+  if (IS_VALID_DOMAIN_ID(domain) && DSP_SEARCH_PATHS_CACHE[domain][0] != '\0')
+    return DSP_SEARCH_PATHS_CACHE[domain];
+
+  return DSP_LIBS_LOCATION;
+}
 
 void set_thread_context(int domain) {
   if (tlsKey != INVALID_KEY) {
@@ -1022,10 +1110,14 @@ static void fastrpc_clear_handle_list(uint32_t req, int domain) {
     if (!QList_IsNull(&hlist[domain].ql)) {
       while ((pn = QList_Pop(&hlist[domain].ql))) {
         struct handle_info *hi = STD_RECOVER_REC(struct handle_info, qn, pn);
+        if (hi->name)
+          free(hi->name);
         free(hi);
         hi = NULL;
       }
     }
+    hlist[domain].domainsCount = 0;
+    hlist[domain].constCount = 0;
     pthread_mutex_unlock(&hlist[domain].lmut);
     break;
   }
@@ -1034,22 +1126,32 @@ static void fastrpc_clear_handle_list(uint32_t req, int domain) {
     if (!QList_IsNull(&hlist[domain].nql)) {
       while ((pn = QList_Pop(&hlist[domain].nql))) {
         struct handle_info *h = STD_RECOVER_REC(struct handle_info, qn, pn);
+        if (h->name)
+          free(h->name);
         free(h);
         h = NULL;
       }
     }
+    hlist[domain].nondomainsCount = 0;
     pthread_mutex_unlock(&hlist[domain].lmut);
     break;
   }
   case REVERSE_HANDLE_LIST_ID: {
+    pthread_mutex_lock(&hlist[domain].lmut);
     if (!QList_IsNull(&hlist[domain].rql)) {
       while ((pn = QList_Pop(&hlist[domain].rql))) {
         struct handle_info *hi = STD_RECOVER_REC(struct handle_info, qn, pn);
+        pthread_mutex_unlock(&hlist[domain].lmut);
         close_reverse_handle(hi->local, dlerrstr, sizeof(dlerrstr), &dlerr);
+        pthread_mutex_lock(&hlist[domain].lmut);
+        if (hi->name)
+          free(hi->name);
         free(hi);
         hi = NULL;
       }
     }
+    hlist[domain].reverseCount = 0;
+    pthread_mutex_unlock(&hlist[domain].lmut);
     break;
   }
   default: {
@@ -1593,6 +1695,10 @@ int remote_handle_open_domain(int domain, const char *name, remote_handle *ph,
       *ph = OISPD_HANDLE;
       hlist[domain].dsppd = OIS_STATICPD;
     }
+    if (pdname_uri) {
+      free(pdname_uri);
+      pdname_uri = NULL;
+    }
     return AEE_SUCCESS;
   }
   if (!strncmp(name, ITRANSPORT_PREFIX "attachuserpd",
@@ -1935,11 +2041,10 @@ bail:
   return nErr;
 }
 
-static int manage_poll_qos(int domain, remote_handle64 h, uint32_t enable,
-                           uint32_t latency) {
+static int manage_poll_qos(int domain, remote_handle64 h, uint32_t enable) {
   int nErr = AEE_SUCCESS, dev = -1;
   const unsigned int MAX_POLL_TIMEOUT = 10000;
-  struct fastrpc_ctrl_latency lp = {0};
+  struct fastrpc_ioctl_set_option op = {0};
 
   /* Handle will be -1 in non-domains invocation. Create DSP session if
    * necessary  */
@@ -1953,13 +2058,10 @@ static int manage_poll_qos(int domain, remote_handle64 h, uint32_t enable,
    * already */
   VERIFYC((hlist) && (-1 != (dev = hlist[domain].dev)), AEE_ERPC);
 
-  // Max poll timeout allowed is 10 ms
-  VERIFYC(latency < MAX_POLL_TIMEOUT, AEE_EBADPARM);
-
   /* Update polling mode in kernel */
-  lp.enable = enable;
-  lp.latency = latency;
-  nErr = ioctl_control(dev, DSPRPC_RPC_POLL, &lp);
+  op.req = FASTRPC_POLL_MODE;
+  op.value = enable;
+  nErr = ioctl_control(dev, FASTRPC_POLL_MODE, &op);
   if (nErr) {
     nErr = convert_kernel_to_user_error(nErr, errno);
     goto bail;
@@ -1968,22 +2070,21 @@ static int manage_poll_qos(int domain, remote_handle64 h, uint32_t enable,
   /* Update polling mode in DSP */
   if (h == INVALID_HANDLE) {
     VERIFY(AEE_SUCCESS ==
-           (nErr = adsp_current_process_poll_mode(enable, latency)));
+           (nErr = adsp_current_process_poll_mode(enable, MAX_POLL_TIMEOUT)));
   } else {
     remote_handle64 handle = get_adsp_current_process1_handle(domain);
     VERIFY(AEE_SUCCESS ==
-           (nErr = adsp_current_process1_poll_mode(handle, enable, latency)));
+           (nErr = adsp_current_process1_poll_mode(handle, enable, MAX_POLL_TIMEOUT)));
   }
   FARF(ALWAYS,
-       "%s: poll mode updated to %u for domain %d, handle 0x%" PRIx64
-       " for timeout %u\n",
-       __func__, enable, domain, h, latency);
+       "%s: poll mode updated to %u for domain %d, handle 0x%" PRIx64 "\n",
+       __func__, enable, domain, h);
 bail:
   if (nErr) {
     FARF(ERROR,
          "Error 0x%x (errno %d): %s failed for domain %d, handle 0x%" PRIx64
-         ", enable %u, timeout %u (%s)\n",
-         nErr, errno, __func__, domain, h, enable, latency, strerror(errno));
+         ", enable %u (%s)\n",
+         nErr, errno, __func__, domain, h, enable, strerror(errno));
   }
   return nErr;
 }
@@ -2118,7 +2219,7 @@ int remote_handle_control_domain(int domain, remote_handle64 h, uint32_t req,
       VERIFY(AEE_SUCCESS ==
              (nErr = manage_adaptive_qos(domain, RPC_DISABLE_QOS)));
       VERIFY(AEE_SUCCESS ==
-             (nErr = manage_poll_qos(domain, h, RPC_DISABLE_QOS, lp->latency)));
+             (nErr = manage_poll_qos(domain, h, 0)));
       /* Error ignored, currently meeting qos requirement is optional. Consider
        * to error out in later targets */
       fastrpc_set_qos_latency(domain, h, FASTRPC_QOS_MAX_LATENCY_USEC);
@@ -2140,7 +2241,7 @@ int remote_handle_control_domain(int domain, remote_handle64 h, uint32_t req,
     }
     case RPC_POLL_QOS: {
       VERIFY(AEE_SUCCESS ==
-             (nErr = manage_poll_qos(domain, h, RPC_POLL_QOS, lp->latency)));
+             (nErr = manage_poll_qos(domain, h, 1)));
       break;
     }
     default:
@@ -2775,8 +2876,8 @@ int remote_session_control(uint32_t req, void *data, uint32_t datalen) {
     VERIFYC(IS_VALID_DOMAIN_ID(domain), AEE_EBADPARM);
     VERIFYC(rpc_uri->module_uri != NULL && rpc_uri->module_uri_len > 0,
             AEE_EBADPARM);
-    VERIFYC(rpc_uri->uri != NULL && rpc_uri->uri_len > rpc_uri->module_uri_len,
-            AEE_EBADPARM);
+    VERIFYC(rpc_uri->uri != NULL, AEE_EBADPARM);
+    VERIFYC(rpc_uri->uri_len > rpc_uri->module_uri_len, AEE_EBADSIZE);
     ret_val = snprintf(0, 0, "%s%s%s%s%d", rpc_uri->module_uri,
                        FASTRPC_DOMAIN_URI, SUBSYSTEM_NAME[domain],
                        FASTRPC_SESSION_URI, rpc_uri->session_id);
@@ -3198,12 +3299,83 @@ static void get_process_testsig(apps_std_FILE *fp, uint64_t *ptrlen) {
   return;
 }
 
-static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
+/*
+ * try_open_shell_file() - Search all known DSP locations for the given shell
+ * file name and open it.
+ *
+ * Search order for the given @shell_name:
+ *   1. Every ';'-separated directory in DSP_LIBS_LOCATION. For each directory
+ *      fopen_from_dirlist() tries "<dir>/<subsystem>/<name>" first and then
+ *      "<dir>/<name>".
+ *   2. VENDOR_DSP_LOCATION "<name>"
+ *   3. VENDOR_DSP_LOCATION "<subsystem>/<name>"
+ *
+ * Args
+ *	@domain		: DSP domain ID (not effective domain ID)
+ *	@shell_name	: Shell file name to look for
+ *	@fh		: [out] Handle of the opened file
+ *
+ * Return	: AEE_SUCCESS if the file was opened, error code otherwise
+ */
+static int try_open_shell_file(int domain, const char *shell_name,
+                               apps_std_FILE *fh) {
   char *absName = NULL;
+  size_t absNameLen = 0;
+  int nErr = AEE_SUCCESS;
+
+  /*
+   * domain is always masked with DOMAIN_ID_MASK by the caller, so it is in
+   * [0, NUM_DOMAINS) and safe to use as a SUBSYSTEM_NAME[] index.
+   */
+  VERIFYC(IS_VALID_DOMAIN_ID(domain) && shell_name && fh, AEE_EBADPARM);
+
+  /* 1. Search the configured DSP library locations. */
+  nErr = fopen_from_dirlist(DSP_LIBS_LOCATION, ";", "r", shell_name, fh);
+  if (!nErr)
+    goto bail;
+
+  /* 2. Fallback to /vendor/dsp/<shell_name> */
+  absNameLen = strlen(VENDOR_DSP_LOCATION) + strlen(shell_name) + 1;
+  VERIFYC(NULL != (absName = (char *)malloc(absNameLen)), AEE_ENOMEMORY);
+  strlcpy(absName, VENDOR_DSP_LOCATION, absNameLen);
+  strlcat(absName, shell_name, absNameLen);
+
+  nErr = apps_std_fopen(absName, "r", fh);
+  if (!nErr)
+    goto bail;
+
+  /* 3. Fallback to /vendor/dsp/<subsystem>/<shell_name> */
+  free(absName);
+  absName = NULL;
+  /* "<vendor>" + "<subsys>" + "/" + "<name>" + NUL */
+  absNameLen = strlen(VENDOR_DSP_LOCATION) + strlen(SUBSYSTEM_NAME[domain]) +
+               1 + strlen(shell_name) + 1;
+  VERIFYC(NULL != (absName = (char *)malloc(absNameLen)), AEE_ENOMEMORY);
+  strlcpy(absName, VENDOR_DSP_LOCATION, absNameLen);
+  strlcat(absName, SUBSYSTEM_NAME[domain], absNameLen);
+  strlcat(absName, "/", absNameLen);
+  strlcat(absName, shell_name, absNameLen);
+
+  nErr = apps_std_fopen(absName, "r", fh);
+bail:
+  free(absName);
+  if (nErr != AEE_SUCCESS) {
+    /*
+     * Do not log the search paths here: DSP_LIBS_LOCATION can be up to
+     * PATH_MAX and this helper is called once per candidate name. The final
+     * error path in open_shell() logs the paths once.
+     */
+    FARF(RUNTIME_RPC_HIGH, "%s: 0x%x: '%s' not found for domain %d", __func__,
+         nErr, shell_name, domain);
+  }
+  return nErr;
+}
+
+static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
   char *shell_absName = NULL;
-  char *domain_str = NULL;
-  char dir_list[PATH_MAX] = {0};
-  uint16_t shell_absNameLen = 0, absNameLen = 0;
+  char *shell_baseName = NULL;
+  char domain_str[16] = {0};
+  size_t shell_absNameLen = 0, shell_baseNameLen = 0;
   int nErr = AEE_SUCCESS;
   int domain = GET_DOMAIN_FROM_EFFEC_DOMAIN_ID(domain_id);
   const char *shell_name = SIGNED_SHELL;
@@ -3215,68 +3387,68 @@ static int open_shell(int domain_id, apps_std_FILE *fh, int unsigned_shell) {
   if (domain == MDSP_DOMAIN_ID) {
     return nErr;
   }
-  VERIFYC(NULL != (domain_str = (char *)malloc(sizeof(domain))), AEE_ENOMEMORY);
-  snprintf(domain_str, sizeof(domain), "%d", domain);
+  /*
+   * Guard the out-param: apps_std_fopen() dereferences it unconditionally on
+   * success, so a NULL here would fault instead of returning an error.
+   */
+  VERIFYC(fh != NULL, AEE_EBADPARM);
+  snprintf(domain_str, sizeof(domain_str), "%d", domain);
 
+  /*
+   * Preferred name is the domain-suffixed one, e.g. "fastrpc_shell_3" /
+   * "fastrpc_shell_unsigned_3".
+   */
   shell_absNameLen = strlen(shell_name) + strlen(domain_str) + 1;
-
-  VERIFYC(NULL !=
-              (shell_absName = (char *)malloc(sizeof(char) * shell_absNameLen)),
+  VERIFYC(NULL != (shell_absName = (char *)malloc(shell_absNameLen)),
           AEE_ENOMEMORY);
   strlcpy(shell_absName, shell_name, shell_absNameLen);
   strlcat(shell_absName, domain_str, shell_absNameLen);
 
-  strlcpy(dir_list, DSP_LIBS_LOCATION, sizeof(dir_list));
-  nErr = fopen_from_dirlist(dir_list, ";", "r", shell_absName, fh);
-
-  if (nErr) {
-    absNameLen = strlen(VENDOR_DSP_LOCATION) + shell_absNameLen + 1;
-    VERIFYC(NULL !=
-                (absName = (char *)realloc(absName, sizeof(char) * absNameLen)),
-            AEE_ENOMEMORY);
-    strlcpy(absName, VENDOR_DSP_LOCATION, absNameLen);
-    strlcat(absName, shell_absName, absNameLen);
-
-    nErr = apps_std_fopen(absName, "r", fh);
-    if (nErr) {
-      absNameLen = strlen(VENDOR_DOM_LOCATION) + shell_absNameLen + 1;
-      VERIFYC(NULL != (absName =
-                           (char *)realloc(absName, sizeof(char) * absNameLen)),
-              AEE_ENOMEMORY);
-      strlcpy(absName, VENDOR_DSP_LOCATION, absNameLen);
-      strlcat(absName, SUBSYSTEM_NAME[domain], absNameLen);
-      strlcat(absName, "/", absNameLen);
-      strlcat(absName, shell_absName, absNameLen);
-
-      nErr = apps_std_fopen(absName, "r", fh);
-    }
+  nErr = try_open_shell_file(domain, shell_absName, fh);
+  if (!nErr) {
+    FARF(RUNTIME_RPC_HIGH, "Successfully opened %s, domain %d", shell_absName,
+         domain);
+    goto bail;
   }
+
+  /*
+   * Some targets ship the shell without the domain ID suffix. Retry with the
+   * base name, i.e. "fastrpc_shell" / "fastrpc_shell_unsigned". Both
+   * SIGNED_SHELL and UNSIGNED_SHELL end with a trailing '_', so the base
+   * name is shell_name with that trailing '_' dropped.
+   */
+  VERIFYC(strlen(shell_name) > 1, AEE_EBADPARM);
+  shell_baseNameLen = strlen(shell_name) - 1;
+  VERIFYC(NULL != (shell_baseName = (char *)malloc(shell_baseNameLen + 1)),
+          AEE_ENOMEMORY);
+  strlcpy(shell_baseName, shell_name, shell_baseNameLen + 1);
+
+  nErr = try_open_shell_file(domain, shell_baseName, fh);
   if (!nErr)
-    FARF(RUNTIME_RPC_HIGH, "Successfully opened %s, domain %d", shell_absName, domain);
+    FARF(RUNTIME_RPC_HIGH, "Successfully opened %s, domain %d", shell_baseName,
+         domain);
 bail:
-  if (domain_str) {
-    free(domain_str);
-    domain_str = NULL;
-  }
-  if (shell_absName) {
-    free(shell_absName);
-    shell_absName = NULL;
-  }
-  if (absName) {
-    free(absName);
-    absName = NULL;
-  }
+  /*
+   * Log before releasing the name buffers, so the exact names attempted can be
+   * printed. Either buffer may be NULL if its allocation failed or if the
+   * first candidate already succeeded.
+   */
   if (nErr != AEE_SUCCESS) {
     if (domain == SDSP_DOMAIN_ID && fh != NULL) {
       nErr = AEE_SUCCESS;
       *fh = -1;
     } else {
       FARF(ERROR,
-           "Error 0x%x: %s failed for domain %d search paths used are %s "
-           "(errno %s)\n",
-           nErr, __func__, domain, DSP_LIBS_LOCATION, strerror(errno));
+           "Error 0x%x: %s failed for domain %d, tried '%s' and '%s', search "
+           "paths used are %s and %s (errno %s)\n",
+           nErr, __func__, domain,
+           shell_absName ? shell_absName : "<not built>",
+           shell_baseName ? shell_baseName : "<not built>",
+           DSP_LIBS_LOCATION, VENDOR_DSP_LOCATION, strerror(errno));
     }
   }
+  free(shell_absName);
+  free(shell_baseName);
   return nErr;
 }
 
@@ -3774,6 +3946,7 @@ static int domain_init(int domain, int *dev) {
     }
   }
   VERIFY(AEE_SUCCESS == (nErr = fastrpc_enable_kernel_optimizations(domain)));
+  build_dsp_search_path_cache_for_domain(domain);
   initFileWatcher(domain); // Ignore errors
   trace_marker_init(domain);
 
@@ -3857,6 +4030,7 @@ static void fastrpc_apps_user_deinit(void) {
     hlist = NULL;
   }
   fastrpc_context_table_deinit();
+  fastrpc_config_deinit();
   deinit_process_signals();
   fastrpc_notif_deinit();
   apps_mem_table_deinit();
@@ -3908,7 +4082,8 @@ static void exit_thread(void *value) {
 }
 
 const char* get_dsp_search_path() {
-  return DSP_LIBS_LOCATION;
+  int domain = GET_DOMAIN_FROM_EFFEC_DOMAIN_ID(get_current_domain());
+  return get_dsp_search_path_for_domain(domain);
 }
 
 /*
