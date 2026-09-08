@@ -1,5 +1,16 @@
 fastrpc (1.0.7-2) unstable; urgency=medium
 
+  * d/rules: enable the installsysusers debhelper sequence add-on, so
+    that dh_installsysusers generates the postinst snippet creating the
+    fastrpc system group; it is not run by default at debhelper compat
+    13, and the group is required by the shipped udev rules to set the
+    ownership of the DSP device nodes.
+  * d/control: drop the now unused adduser from fastrpc-support Depends;
+    the fastrpc group is created via systemd-sysusers, which is pulled
+    in through ${misc:Depends}.
+  * d/control: fastrpc-support Depends on acl, as the shipped udev rules
+    call setfacl to grant the fastrpc group access to the system DMA
+    heap.
   * Add patch fix-hexagon-path with upstream fix from PR #387; fixes
     lookup of non-machine specific Hexagon DSP files which were missing
     a / separator.
