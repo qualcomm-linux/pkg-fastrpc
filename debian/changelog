@@ -1,3 +1,11 @@
+fastrpc (1.0.7-2) unstable; urgency=medium
+
+  * Add patch fix-hexagon-path with upstream fix from PR #387; fixes
+    lookup of non-machine specific Hexagon DSP files which were missing
+    a / separator.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Tue, 08 Sep 2026 21:51:19 +0200
+
 fastrpc (1.0.7-1) unstable; urgency=medium
 
   * New upstream release
