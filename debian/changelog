@@ -1,8 +1,31 @@
-fastrpc (1.0.7-1qli2~) UNRELEASED; urgency=medium
+fastrpc (1.0.7-2qli1~) UNRELEASED; urgency=medium
 
   * Unreleased changes
 
  -- Debusine Action Bot <noreply@bot.invalid>  Thu, 27 Aug 2026 09:31:15 +0000
+
+fastrpc (1.0.7-2) unstable; urgency=medium
+
+  * d/control: Build-Depends on dh-sequence-installsysusers, so that
+    dh_installsysusers generates the postinst snippet creating the
+    fastrpc system group; it is not run by default at debhelper compat
+    13, and the group is required by the shipped udev rules to set the
+    ownership of the DSP device nodes.
+    - The build-dependency form is used rather than "dh --with
+      installsysusers" as the latter triggers a false positive
+      missing-build-dependency-for-dh-addon from lintian, which lacks
+      installsysusers in its list of debhelper-provided add-ons.
+  * d/control: drop the now unused adduser from fastrpc-support Depends;
+    the fastrpc group is created via systemd-sysusers, which is pulled
+    in through ${misc:Depends}.
+  * d/control: fastrpc-support Depends on acl, as the shipped udev rules
+    call setfacl to grant the fastrpc group access to the system DMA
+    heap.
+  * Add patch fix-hexagon-path with upstream fix from PR #387; fixes
+    lookup of non-machine specific Hexagon DSP files which were missing
+    a / separator.
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Tue, 08 Sep 2026 21:51:19 +0200
 
 fastrpc (1.0.7-1qli1) forky; urgency=medium
 

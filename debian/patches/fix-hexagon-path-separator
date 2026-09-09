@@ -1,0 +1,23 @@
+Description: Add path separator in HEXAGON_LIBS_PATH_PREFIX
+ HEXAGON_LIBS_PATH_PREFIX concatenates CONFIG_BASE_DIR with "hexagon"
+ without a '/', so builds using --with-config-base-dir without a trailing
+ slash (including Debian's /usr/share/hexagon-dsp) produce a malformed
+ architecture-specific DSP search path such as
+ /usr/share/hexagon-dsphexagon/v73.
+Author: Vinayak Katoch <vinayak.katoch@oss.qualcomm.com>
+Origin: upstream, https://github.com/qualcomm/fastrpc/pull/387/commits/6ae1bcc4af8350d8e29757864144fdea3380b259
+Bug: https://github.com/qualcomm/fastrpc/issues/386
+Forwarded: https://github.com/qualcomm/fastrpc/pull/387
+Last-Update: 2026-09-08
+
+--- a/src/fastrpc_apps_user.c
++++ b/src/fastrpc_apps_user.c
+@@ -77,7 +77,7 @@
+ 
+ #define VENDOR_DSP_LOCATION "/vendor/dsp/"
+ #define VENDOR_DOM_LOCATION "/vendor/dsp/xdsp/"
+-#define HEXAGON_LIBS_PATH_PREFIX CONFIG_BASE_DIR "hexagon"
++#define HEXAGON_LIBS_PATH_PREFIX CONFIG_BASE_DIR "/hexagon"
+ 
+ char DSP_LIBS_LOCATION[PATH_MAX] = DEFAULT_DSP_SEARCH_PATHS;
+ static char DSP_SEARCH_PATHS_CACHE[NUM_DOMAINS][PATH_MAX] = {{0}};
