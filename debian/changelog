@@ -1,11 +1,11 @@
-fastrpc (1.0.7-2qli1~) UNRELEASED; urgency=medium
+fastrpc (1.0.7-2qli1) forky; urgency=medium
 
   [ Robie Basak ]
   * Merge changes from 1.0.7-2. Remaining changes:
     - Cherry-pick 8dc6e21 to re-add fastrpc-tests package.
   * d/gbp.conf: update debian-branch for qli branch prefix.
 
- -- Debusine Action Bot <noreply@bot.invalid>  Thu, 27 Aug 2026 09:31:15 +0000
+ -- Debusine Action Bot <noreply@bot.invalid>  Wed, 09 Sep 2026 09:45:43 +0000
 
 fastrpc (1.0.7-2) unstable; urgency=medium
 
