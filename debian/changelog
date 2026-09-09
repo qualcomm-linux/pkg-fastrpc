@@ -1,6 +1,8 @@
 fastrpc (1.0.7-2qli1~bpo13+1~) UNRELEASED; urgency=medium
 
-  * Unreleased changes
+  [ Robie Basak ]
+  * Backport 1.0.7-2qli1.
+  * d/gbp.conf: update debian-branch for trixie.
 
  -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:25:43 +0000
 
