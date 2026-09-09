@@ -1,3 +1,4 @@
+usr/bin/dsp_check usr/libexec/${DEB_HOST_MULTIARCH}/fastrpc
 usr/sbin/adsprpcd
 usr/sbin/cdsprpcd
 usr/sbin/sdsprpcd
@@ -12,3 +13,4 @@ usr/lib/systemd/system/sdsprpcd.service
 usr/lib/udev/rules.d/59-fastrpc-remoteproc.rules
 usr/lib/udev/rules.d/60-fastrpc.rules
 usr/lib/sysusers.d/fastrpc.conf
+usr/share/man/man8/*
