@@ -1,10 +1,10 @@
-fastrpc (1.0.7-2qli1~bpo13+1~) UNRELEASED; urgency=medium
+fastrpc (1.0.7-2qli1~bpo13+1) trixie; urgency=medium
 
   [ Robie Basak ]
   * Backport 1.0.7-2qli1.
   * d/gbp.conf: update debian-branch for trixie.
 
- -- Debusine Action Bot <noreply@bot.invalid>  Thu, 13 Aug 2026 19:25:43 +0000
+ -- Debusine Action Bot <noreply@bot.invalid>  Wed, 09 Sep 2026 12:42:17 +0000
 
 fastrpc (1.0.7-2qli1) forky; urgency=medium
 
