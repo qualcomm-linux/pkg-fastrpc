@@ -530,7 +530,7 @@ static int fastrpc_mmap_helper(int *domain, int fd, void *vaddr, int offset,
   map.m.vaddrout = 0;
   mNode->map = map.m;
   iocErr = ioctl_mmap(dev, MEM_MAP, flags, attrs, fd, offset, length,
-                      (uint64_t)vaddr, vaddrout);
+                      (uint64_t)(uintptr_t)vaddr, vaddrout);
   if (!iocErr) {
     mNode->map.vaddrout = *vaddrout;
     mNode->refs = 1;
@@ -932,6 +932,7 @@ int remote_munmap64(uint64_t vaddrout, int64_t size) {
 
   VERIFY(AEE_SUCCESS == (nErr = fastrpc_init_once()));
 
+  VERIFYC(size > 0, AEE_EBADPARM);
   domain = get_current_domain();
   VERIFYC(IS_VALID_EFFECTIVE_DOMAIN_ID(domain), AEE_ERPC);
 

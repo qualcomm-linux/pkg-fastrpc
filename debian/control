@@ -5,6 +5,7 @@ Standards-Version: 4.6.2
 Section: contrib/misc
 Build-Depends:
  debhelper-compat (= 13),
+ dh-sequence-installsysusers,
  libbsd-dev,
  libyaml-dev,
  pkgconf,
@@ -43,7 +44,10 @@ Description: Qualcomm FastRPC - support daemons and udev rules
  .
  This package provides the necessary support daemons used to supply object code
  to the DSPs and the udev rules to make the DSPs available to users.
-Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
+Depends: acl,
+         libfastrpc1 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
 Recommends: hexagon-dsp-binaries
 
 Package: fastrpc-tests
