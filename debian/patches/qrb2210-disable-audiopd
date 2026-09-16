@@ -1,0 +1,41 @@
+From: Christopher Obbard <chris.obbard@oss.qualcomm.com>
+Date: Wed, 16 Sep 2026 16:00:55 +0100
+Subject: Disable audiopd daemon on QRB2210
+
+QRB2210 (RB1 and Arduino Uno Q) exposes /dev/fastrpc-adsp, so the unit's
+existing ConditionPathExists= checks pass and adsprpcd is started, but on
+these Agatti platforms the device tree does not protect the memory region
+used by fastrpc. Starting the audiopd daemon reboots the board which makes
+the machine unusable rather than simply leaving the unit failed.
+
+The kernel side is fixed by the device tree patch linked below but it may
+not reach released kernels for some time. Until it does, guard the
+unit with a ConditionFirmware= match on the device tree compatible so it
+is skipped on affected machines:
+https://lore.kernel.org/all/20260908-agatti-audio-v4-1-b3db91d3fdec@oss.qualcomm.com/
+
+Bug: https://github.com/qualcomm-linux/qcom-deb-images/issues/572
+Forwarded: no
+Last-Update: 2026-09-16
+
+Signed-off-by: Christopher Obbard <chris.obbard@oss.qualcomm.com>
+---
+ files/adsprpcd_audiopd.service.in | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/files/adsprpcd_audiopd.service.in b/files/adsprpcd_audiopd.service.in
+index 6fb786c..b212548 100644
+--- a/files/adsprpcd_audiopd.service.in
++++ b/files/adsprpcd_audiopd.service.in
+@@ -3,6 +3,11 @@ Description=audiopd aDSP RPC daemon
+ After=dev-fastrpc\x2dadsp.device dev-fastrpc\x2dadsp\x2dsecure.device
+ ConditionPathExists=|/dev/fastrpc-adsp
+ ConditionPathExists=|/dev/fastrpc-adsp-secure
++# Starting audiopd reboots QRB2210 devices (RB1 and Arduino Uno Q) because
++# the fastrpc memory region is not protected in the device tree, see
++# https://github.com/qualcomm-linux/qcom-deb-images/issues/572
++# TODO: drop this once the device tree fix has reached released kernels
++ConditionFirmware=!device-tree-compatible(qcom,qrb2210)
+ 
+ [Service]
+ Type=exec
