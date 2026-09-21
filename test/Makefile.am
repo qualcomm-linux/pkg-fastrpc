@@ -1,5 +1,9 @@
-# Define the test program
-bin_PROGRAMS = fastrpc_test
+# Define the test programs
+bin_PROGRAMS = fastrpc_test dsp_check
+
+# ------------------------
+# fastrpc_test binary
+# ------------------------
 
 # Define the source files for the test program
 fastrpc_test_SOURCES = fastrpc_test.c
@@ -20,6 +24,34 @@ fastrpc_test_LDADD = -ldl $(USE_LOG)
 if ANDROID_CC
 fastrpc_test_CFLAGS += -DANDROID
 endif
+
+# ------------------------
+# dsp_check binary
+# ------------------------
+
+# Source file
+dsp_check_SOURCES = dsp_check.c
+
+# Base compiler flags (always)
+dsp_check_CFLAGS = -I$(top_srcdir)/inc -DUSE_SYSLOG
+
+if ANDROID_CC
+dsp_check_CFLAGS += -DANDROID
+else
+dsp_check_CFLAGS += -DPARSE_YAML @YAML_CFLAGS@
+endif
+
+# Linker flags
+if ANDROID_CC
+dsp_check_LDADD = -ldl $(USE_LOG)
+else
+dsp_check_LDADD = -ldl @YAML_LIBS@
+endif
+
+
+# ------------------------
+# Test libraries and DSP artifacts
+# ------------------------
 
 TESTLIST = \
 	calculator \
