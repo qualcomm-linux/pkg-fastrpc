@@ -1,0 +1,33 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        # Create fastrpc group via systemd-sysusers
+        if command -v systemd-sysusers >/dev/null 2>&1; then
+            systemd-sysusers /usr/lib/sysusers.d/fastrpc.conf || true
+        fi
+
+        # Fallback in case systemd-sysusers is unavailable or failed
+        if ! getent group fastrpc >/dev/null; then
+            addgroup --system fastrpc
+        fi
+
+        # Add target user to fastrpc group
+        #
+        # Do NOT use $USER directly here:
+        # during package installation, $USER is usually root.
+        #
+        # If package is installed via sudo apt install ./xxx.deb,
+        # SUDO_USER may contain the real invoking user.
+        if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+            if getent passwd "$SUDO_USER" >/dev/null; then
+                usermod -aG fastrpc "$SUDO_USER" || true
+            fi
+        fi
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0
