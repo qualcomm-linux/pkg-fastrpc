@@ -1,3 +1,9 @@
+fastrpc (1.0.7-3~) UNRELEASED; urgency=medium
+
+  * WIP — update changelog before next release
+
+ -- Robie Basak <robie.basak@oss.qualcomm.com>  Wed, 14 Oct 2026 14:52:17 +0000
+
 fastrpc (1.0.7-2) resolute; urgency=medium
 
   [ Loïc Minier ]
