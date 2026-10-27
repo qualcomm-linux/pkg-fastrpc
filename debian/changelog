@@ -1,6 +1,7 @@
 fastrpc (1.0.8-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * d/patches: drop hexagon path separator patch merged upstream
 
  -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Tue, 27 Oct 2026 15:09:37 +0100
 
