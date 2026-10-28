@@ -3,8 +3,9 @@ fastrpc (1.0.8-1) UNRELEASED; urgency=medium
   * New upstream release
   * d/patches: drop hexagon path separator patch merged upstream
   * d/patches: disable audiopd daemon on QRB2210
+  * fastrpc-support: libexec/dsp_check is now /usr/bin/fastrpc-healthcheck
 
- -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Tue, 27 Oct 2026 15:09:37 +0100
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 28 Oct 2026 15:32:45 +0100
 
 fastrpc (1.0.7-2) unstable; urgency=medium
 
