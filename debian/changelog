@@ -1,4 +1,4 @@
-fastrpc (1.0.8-1) UNRELEASED; urgency=medium
+fastrpc (1.0.8-1) unstable; urgency=medium
 
   [ Michaël Blanc ]
   * fastrpc-support: Add udev rule triggering in postinst
@@ -11,7 +11,7 @@ fastrpc (1.0.8-1) UNRELEASED; urgency=medium
   * fastrpc-support: libexec/dsp_check is now /usr/bin/fastrpc-healthcheck
   * Introduce fastrpc-support.NEWS
 
- -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 28 Oct 2026 15:56:28 +0100
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 28 Oct 2026 16:14:17 +0100
 
 fastrpc (1.0.7-2) unstable; urgency=medium
 

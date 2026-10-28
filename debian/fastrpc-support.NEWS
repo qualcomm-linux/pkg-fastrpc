@@ -1,8 +1,8 @@
-fastrpc (1.0.8-1) UNRELEASED; urgency=medium
+fastrpc (1.0.8-1) unstable; urgency=medium
 
   The dsp_check executable in /usr/libexec/${DEB_HOST_MULTIARCH}/fastrpc/ has
   been renamed and moved to /usr/bin/fastrpc-healthcheck. Users of this binary
   are advised to consider this new path. A corresponding man page
   fastrpc-healthcheck(1) is now installed as well.
 
- -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 28 Oct 2026 15:50:15 +0100
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 28 Oct 2026 16:14:17 +0100
