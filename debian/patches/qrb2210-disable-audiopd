@@ -15,8 +15,8 @@ is skipped on affected machines:
 https://lore.kernel.org/all/20260908-agatti-audio-v4-1-b3db91d3fdec@oss.qualcomm.com/
 
 Bug: https://github.com/qualcomm-linux/qcom-deb-images/issues/572
-Forwarded: no
-Last-Update: 2026-09-16
+Forwarded: https://github.com/qualcomm/fastrpc/pull/414
+Last-Update: 2026-10-28
 
 Signed-off-by: Christopher Obbard <chris.obbard@oss.qualcomm.com>
 ---
@@ -24,7 +24,7 @@ Signed-off-by: Christopher Obbard <chris.obbard@oss.qualcomm.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/files/adsprpcd_audiopd.service.in b/files/adsprpcd_audiopd.service.in
-index 6fb786c..b212548 100644
+index da08bb5..0d303b8 100644
 --- a/files/adsprpcd_audiopd.service.in
 +++ b/files/adsprpcd_audiopd.service.in
 @@ -3,6 +3,11 @@ Description=audiopd aDSP RPC daemon
