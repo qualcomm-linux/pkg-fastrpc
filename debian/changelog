@@ -1,3 +1,18 @@
+fastrpc (1.0.8-1) unstable; urgency=medium
+
+  [ Michaël Blanc ]
+  * fastrpc-support: Add udev rule triggering in postinst
+
+  [ Agathe Porte ]
+  * New upstream release
+  * d/control: add myself as uploader
+  * d/patches: drop hexagon path separator patch merged upstream
+  * d/patches: disable audiopd daemon on QRB2210
+  * fastrpc-support: libexec/dsp_check is now /usr/bin/fastrpc-healthcheck
+  * Introduce fastrpc-support.NEWS
+
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 28 Oct 2026 16:14:17 +0100
+
 fastrpc (1.0.7-2qli1) forky; urgency=medium
 
   [ Robie Basak ]
