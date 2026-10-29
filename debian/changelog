@@ -1,3 +1,9 @@
+fastrpc (1.0.8-1qli1~bpo13+1~) UNRELEASED; urgency=medium
+
+  * Rebuild for trixie.
+
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Thu, 29 Oct 2026 15:15:15 +0100
+
 fastrpc (1.0.8-1qli1) forky; urgency=medium
 
   [ Agathe Porte ]
