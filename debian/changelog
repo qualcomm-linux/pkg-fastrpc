@@ -1,3 +1,10 @@
+fastrpc (1.0.8-1qli1~) UNRELEASED; urgency=medium
+
+  * Merge changes from 1.0.8-1. Remaining changes:
+    - Cherry-pick 8dc6e21 to re-add fastrpc-tests package.
+
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Thu, 29 Oct 2026 14:35:38 +0100
+
 fastrpc (1.0.8-1) unstable; urgency=medium
 
   [ Michaël Blanc ]
