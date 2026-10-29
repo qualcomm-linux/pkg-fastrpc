@@ -27,7 +27,14 @@
 #define PATH_MAX 4096
 #endif
 
-#define QCOM_BASE_DIR "/usr/share/qcom"
+#ifndef CONFIG_BASE_DIR
+#define CONFIG_BASE_DIR "/usr/share/qcom/"
+#endif
+#define QCOM_BASE_DIR CONFIG_BASE_DIR
+
+#ifndef LIBDIR
+#define LIBDIR "/usr/lib"
+#endif
 #define MACHINE_MODEL_PATH "/sys/firmware/devicetree/base/model"
 
 #ifdef ANDROID
@@ -230,7 +237,11 @@ static char* find_dsp_library_path_from_yaml(void)
     if (read_text(MACHINE_MODEL_PATH, machine, sizeof(machine)) < 0)
         return NULL;
     machine[strcspn(machine, "\n")] = '\0';
-    DIR* dir = opendir("/usr/share/qcom/conf.d");
+
+    char conf_dir[PATH_MAX];
+    snprintf(conf_dir, sizeof(conf_dir), "%s/conf.d", QCOM_BASE_DIR);
+
+    DIR* dir = opendir(conf_dir);
     if (!dir)
         return NULL;
 
@@ -243,7 +254,7 @@ static char* find_dsp_library_path_from_yaml(void)
 
         char yaml_path[PATH_MAX];
         snprintf(yaml_path, sizeof(yaml_path),
-                 "/usr/share/qcom/conf.d/%s", de->d_name);
+                 "%s/%s", conf_dir, de->d_name);
 
         FILE* f = fopen(yaml_path, "r");
         if (!f)
@@ -723,20 +734,16 @@ static void build_search_for(dsp_t* d, const char* dsp_all_env, const char* yaml
     if (yaml_base_path) {
         char dsp_base[PATH_MAX];
         snprintf(dsp_base, sizeof(dsp_base), "%s/%s", QCOM_BASE_DIR, yaml_base_path);
-        if (is_dir(dsp_base)) {
-            DIR* dir = opendir(dsp_base);
-            if (dir) {
-                struct dirent* de;
-                while ((de = readdir(dir)) != NULL) {
-                    if (de->d_name[0] == '.') continue;
-                    char subdir[PATH_MAX];
-                    snprintf(subdir, sizeof(subdir), "%s/%s", dsp_base, de->d_name);
-                    if (is_dir(subdir)) {
-                        vec_push(&ordered, subdir);
-                    }
-                }
-                closedir(dir);
-            }
+
+        char dsp_lc[16];
+        snprintf(dsp_lc, sizeof(dsp_lc), "%s", d->name);
+        for (char* c = dsp_lc; *c; c++)
+            *c = (char)tolower((unsigned char)*c);
+
+        char subdir[PATH_MAX];
+        snprintf(subdir, sizeof(subdir), "%s/%s", dsp_base, dsp_lc);
+        if (is_dir(subdir)) {
+            vec_push(&ordered, subdir);
         }
     }
 
@@ -857,12 +864,24 @@ static void build_usr_lib_dirs(strv_t* out) {
         "/vendor/lib64"
     };
 #else
+    /*
+     * LIBDIR is the configured library directory, which is not always
+     * /usr/lib: multiarch distributions install to a triplet-qualified
+     * path such as /usr/lib/aarch64-linux-gnu. Both are checked as the
+     * FastRPC libraries may come from a differently configured build.
+     */
     const char* stds[] = {
+        LIBDIR,
         "/usr/lib"
     };
 #endif
 
-    for (size_t i=0;i<sizeof(stds)/sizeof(stds[0]); ++i) if (is_dir(stds[i])) vec_push(out, stds[i]);
+    for (size_t i=0;i<sizeof(stds)/sizeof(stds[0]); ++i) {
+        bool dup = false;
+        for (size_t j=0;j<i && !dup; ++j)
+            if (strcmp(stds[i], stds[j]) == 0) dup = true;
+        if (!dup && is_dir(stds[i])) vec_push(out, stds[i]);
+    }
 }
 
 static void usage(const char* argv0) {
@@ -891,7 +910,8 @@ static bool scan_qcom_yaml_and_check_dsp_modules(
         return false;
     }
 
-    const char* dirpath = "/usr/share/qcom/conf.d";
+    char dirpath[PATH_MAX];
+    snprintf(dirpath, sizeof(dirpath), "%s/conf.d", QCOM_BASE_DIR);
     DIR* dir = opendir(dirpath);
     if (!dir) {
         return false;

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+# retrigger udev rules for fastrpc dev nodes, this must happen
+# after systemd-sysusers is called, as it may create the fastrpc group,
+# which is required by these udev rules
+if [ "$1" = "configure" ] && [ -z "$DPKG_ROOT" ]; then
+    if which -s udevadm ; then
+        for f in $(find /dev -name 'fastrpc-*' -maxdepth 1); do
+            udevadm trigger --subsystem-match=misc --action=add --name-match="$f" || true
+        done
+        udevadm trigger --subsystem-match=dma_heap --action=add || true
+    fi
+fi
