@@ -1,3 +1,9 @@
+fastrpc (1.0.9-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Loïc Minier <loic.minier@oss.qualcomm.com>  Tue, 17 Nov 2026 22:05:18 +0100
+
 fastrpc (1.0.8-1) unstable; urgency=medium
 
   [ Michaël Blanc ]
