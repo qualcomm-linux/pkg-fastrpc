@@ -1,5 +1,5 @@
 // Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-// SPDX-License-Identifier: BSD-3-Clause-Clear
+// SPDX-License-Identifier: BSD-3-Clause
 
 #ifndef FASTRPC_YAML_PARSER_H
 #define FASTRPC_YAML_PARSER_H
@@ -22,6 +22,11 @@ extern const char *DSP_ARCH_KEY[NUM_DOMAINS];
 extern char DSP_LIBS_LOCATION[PATH_MAX];
 
 void configure_dsp_paths();
+
+#ifndef __ANDROID__
 const char *get_dsp_arch_from_yaml(int domain);
+#else
+static inline const char *get_dsp_arch_from_yaml(int domain) { return NULL; }
+#endif
 
 #endif /*FASTRPC_YAML_PARSER_H*/
