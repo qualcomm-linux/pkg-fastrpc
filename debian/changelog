@@ -1,3 +1,9 @@
+fastrpc (1.0.9-1~bpo13+1) trixie-backports; urgency=medium
+
+  * Rebuild for trixie-backports.
+
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Wed, 25 Nov 2026 11:22:09 +0000
+
 fastrpc (1.0.9-1) unstable; urgency=medium
 
   * New upstream release
