@@ -1,3 +1,9 @@
+fastrpc (1.0.9-1~bpo13+2) trixie-backports; urgency=medium
+
+  * Source-only upload for buildd to build arm64.
+
+ -- Agathe Porte <agathe.porte@oss.qualcomm.com>  Thu, 26 Nov 2026 16:04:18 +0100
+
 fastrpc (1.0.9-1~bpo13+1) trixie-backports; urgency=medium
 
   * Rebuild for trixie-backports.
